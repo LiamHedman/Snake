@@ -4,8 +4,9 @@ type coordinate = {
     content: snake | fruit
 }
 
-type fruit = string
+type fruit = string 
 type snake = Array<coordinate>
+type board = Array<Array<coordinate>>
 
 function is_empty(coordinate: coordinate) {
     return coordinate.content === null      
