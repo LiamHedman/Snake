@@ -109,22 +109,26 @@ export function spawn_fruit(snake) {
     return fruit_cords;
 }
 
-export function is_game_over(snake_: snake) : void {
-
+export function game_over() : void {
+    ctx.font = `40px Verdana`
+    ctx.fillText("GAME OVER", 130, 250)
 }
 
 // Main function to call
-export function update() {
+function update() {
     //clear_canvas()
+    move_snake(snake_)
     ctx.clearRect(0, 0, map_size * 25, map_size * 25)
     ctx.fillStyle = 'rgba(0, 0, 0, 1)';
     for (let i = 0; i < snake_.cords.length; i++) {
         ctx.fillRect(snake_.cords[i][0] * 25, snake_.cords[i][1] * 25, 25, 25)
     }
-    move_snake(snake_)
     
 
-
+    if (snake_.cords[0][0] > map_size || snake_.cords[0][1] > map_size) {
+        game_over()
+        clearInterval(interval)
+    }
 }
 
 
@@ -132,4 +136,4 @@ let snake_: snake = {cords: [[0, 2], [0, 1], [0,0]], direction: "down"}
 
 
 
-setInterval(update, tick_rate);
+const interval = setInterval(update, tick_rate);
