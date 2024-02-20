@@ -114,6 +114,23 @@ export function game_over() : void {
     ctx.fillText("GAME OVER", 130, 250)
 }
 
+/**
+ * Resets the game state, clears the interval, and restarts the game loop.
+ * @param interval - The ID of the current game loop interval.
+ * @returns The new ID of the restarted game loop interval.
+ */
+export function reset(interval: number): number{
+    // Reset the snake 
+    let snake_: snake = {cords: [[0, 2], [0, 1], [0,0]], direction: "down"}
+
+    // Clear in case it's running
+    clearInterval(interval);
+
+    // Start the game over and return the new interval ID
+    return setInterval(update, tick_rate);
+}
+
+
 // Main function to call
 function update() {
     //clear_canvas()
@@ -130,9 +147,6 @@ function update() {
     }  
 }
 
-
 let snake_: snake = {cords: [[0, 2], [0, 1], [0,0]], direction: "down"}
-
-
 
 const interval = setInterval(update, tick_rate);
