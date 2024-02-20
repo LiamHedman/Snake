@@ -1,7 +1,10 @@
 export type coordinate = barrier | fruit | null
 export type barrier = string
 export type fruit = string 
-export type snake = Array<barrier>
+export type snake = {
+    body: Array<barrier>
+    head_pos: coordinate
+}
 export type map = Array<Array<coordinate>>
 
 export const map: map = make_empty_map(20);
