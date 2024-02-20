@@ -118,17 +118,16 @@ export function game_over() : void {
 function update() {
     //clear_canvas()
     move_snake(snake_)
-    ctx.clearRect(0, 0, map_size * 25, map_size * 25)
-    ctx.fillStyle = 'rgba(0, 0, 0, 1)';
-    for (let i = 0; i < snake_.cords.length; i++) {
-        ctx.fillRect(snake_.cords[i][0] * 25, snake_.cords[i][1] * 25, 25, 25)
-    }
-    
-
-    if (snake_.cords[0][0] > map_size || snake_.cords[0][1] > map_size) {
+    if (snake_.cords[0][0] >= map_size || snake_.cords[0][1] >= map_size) {
         game_over()
         clearInterval(interval)
-    }
+    } else {
+        ctx.clearRect(0, 0, map_size * 25, map_size * 25)
+        ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+        for (let i = 0; i < snake_.cords.length; i++) {
+            ctx.fillRect(snake_.cords[i][0] * 25, snake_.cords[i][1] * 25, 25, 25)
+        }
+    }  
 }
 
 
