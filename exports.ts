@@ -130,7 +130,6 @@ export function reset(interval: number): number{
     return setInterval(update, tick_rate);
 }
 
-
 // Main function to call
 function update() {
     //clear_canvas()
@@ -147,6 +146,9 @@ function update() {
     }  
 }
 
+
 let snake_: snake = {cords: [[0, 2], [0, 1], [0,0]], direction: "down"}
+
+
 
 const interval = setInterval(update, tick_rate);
