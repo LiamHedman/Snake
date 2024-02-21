@@ -25,7 +25,7 @@ var foodY;
 var scoreCounter = document.createElement("div");
 var score = 0;
 var hasTurned = true;
-var gameOver = false;
+var GameOver = false;
 
 var HeadUp = new Image();
 var HeadDown = new Image();
@@ -73,16 +73,26 @@ window.onload = function() {
     restartButton.style.color = "white";
     restartButton.style.backgroundColor = "transparent"; // Set background color to transparent
 
-
     restartButton.addEventListener("click", function() {
         location.reload(); // Reload the page to restart the game
     });
 
-    document.body.appendChild(restartButton);
+    document.body.appendChild(restartButton);  
 }
 
 function update() {
-    if (gameOver) {
+    if (GameOver) {
+        var gameOver = document.createElement("div");
+        gameOver.textContent = "GAME OVER";
+        gameOver.style.position = "absolute";
+        gameOver.style.top = "250px";
+        gameOver.style.left = "420px";
+        gameOver.style.color = "white";
+        gameOver.style.fontFamily = "Press Start 2P, monospace";
+        gameOver.style.fontSize = "100px";
+    
+        document.body.appendChild(gameOver); 
+
         return;
     }
 
@@ -131,12 +141,12 @@ function update() {
     */
 
     if (snakeX < 0 || snakeX > (cols - 1) * blockSize || snakeY < 0 || snakeY > (cols - 1) * blockSize) {
-        gameOver = true;
+        GameOver = true;
         alert("Game over: Out of bounds!");
     }
     for (let i = 0; i < snakebody.length; i++) {
         if (snakeX == snakebody[i][0] && snakeY == snakebody[i][1]) {
-            gameOver = true;
+            GameOver = true;
             alert("Game over: Collided with body!");
         }
     }
