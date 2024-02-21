@@ -30,10 +30,10 @@ var HeadDown = new Image();
 var HeadLeft = new Image();
 var HeadRight = new Image();
 
-HeadUp.src = "HeadUp.png"
-HeadRight.src = "HeadRight.png"
-HeadDown.src = "HeadDown.png"
-HeadLeft.src = "HeadLeft.png"
+HeadUp.src = "Bilder/HeadUp.png"
+HeadRight.src = "Bilder/HeadRight.png"
+HeadDown.src = "Bilder/HeadDown.png"
+HeadLeft.src = "Bilder/HeadLeft.png"
 
 window.onload = function() {
     board = document.getElementById("board");
