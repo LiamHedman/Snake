@@ -61,6 +61,24 @@ window.onload = function() {
 
     // Append the score counter element to the board container
     document.body.appendChild(scoreCounter);
+
+    var restartButton = document.createElement("button");
+    restartButton.textContent = "RESTART";
+    restartButton.style.position = "absolute";
+    restartButton.style.top = "90px";
+    restartButton.style.right = "395px";
+    restartButton.style.padding = "5px 10px";
+    restartButton.style.fontSize = "16px";
+    restartButton.style.cursor = "pointer";
+    restartButton.style.color = "white";
+    restartButton.style.backgroundColor = "transparent"; // Set background color to transparent
+
+
+    restartButton.addEventListener("click", function() {
+        location.reload(); // Reload the page to restart the game
+    });
+
+    document.body.appendChild(restartButton);
 }
 
 function update() {
