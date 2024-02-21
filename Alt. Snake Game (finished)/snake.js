@@ -22,6 +22,8 @@ var foodX;
 var foodY;
 
 //Game logic
+var scoreCounter = document.createElement("div");
+var score = 0;
 var hasTurned = true;
 var gameOver = false;
 
@@ -47,6 +49,18 @@ window.onload = function() {
         document.addEventListener("keydown", changeDirection);
     }
     setInterval(update, 1000/10);
+
+    scoreCounter.style.position = "absolute";
+    scoreCounter.style.top = "90px";
+    scoreCounter.style.left = "400px";
+    scoreCounter.style.color = "white";
+    scoreCounter.style.fontFamily = "Press Start 2P, monospace";
+    scoreCounter.style.fontSize = "20px";
+    
+    scoreCounter.textContent = "SCORE: " + score;
+
+    // Append the score counter element to the board container
+    document.body.appendChild(scoreCounter);
 }
 
 function update() {
@@ -67,6 +81,7 @@ function update() {
     //Eat the food
     if (snakeX == foodX - blockSize / 2 && snakeY == foodY - blockSize / 2) {
         snakebody.push([foodX, foodY]);
+        scoreUpdate();
         spawnFood();
     }
 
@@ -108,6 +123,11 @@ function update() {
         }
     }
     hasTurned = true;
+}
+
+function scoreUpdate() {
+    score += Math.floor(Math.random() * 5 + 5);
+    scoreCounter.textContent = "SCORE: " + score;
 }
 
 function drawSnakeHead() {
@@ -153,6 +173,11 @@ function changeDirection(e) {
 function spawnFood() {
     foodX = Math.floor(Math.random() * cols) * blockSize + blockSize / 2;
     foodY = Math.floor(Math.random() * rows) * blockSize + blockSize / 2;
+    for (let i = snakebody.length; i > 0; i--) {
+        if (foodX == snakebody[i][0] && foodY == snakebody[i][1] || foodX == snakeX && foodY == snakeY) {
+            spawnFood();
+        }
+    }
 }
 
 function gradient(distanceFromHead) {
