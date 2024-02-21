@@ -1,54 +1,93 @@
-// Board
-var blockSize = 25;
-var rows = 20;
-var cols = 20;
-var board;
-var context;
-// Snake head
-var snakeDirection = "up";
-var snakeX = blockSize * 9;
-var snakeY = blockSize * 9;
-var velocityX = 0;
-var velocityY = 0;
-// Snake body
-var snakebody = [];
-// Food
-var foodX;
-var foodY;
+// Board variables
+const blockSize: number = 25;
+
+    //Board dimensions
+const rows: number = 20;
+const cols: number = 20;
+
+    //The board (drawable region in HTML)
+let board: HTMLCanvasElement;
+
+    //Provides the 2D rendering context for the drawing surface the canvas element. 
+    //Contains methods and properties that allow drawing shapes, text, images, etc. 
+let context: CanvasRenderingContext2D;
+
+// Snake variables
+let snakeDirection: string = "up";
+
+    //Snake head
+let snakeX: number = blockSize * 9;
+let snakeY: number = blockSize * 9;
+
+    //Snake body (array of coordinates)
+const snakebody: [number, number][] = [];
+
+    //Directional movement of snake
+let velocityX: number = 0;
+let velocityY: number = 0;
+
+    //Pictures of the snake's head
+const HeadUp: HTMLImageElement = new Image();
+const HeadDown: HTMLImageElement = new Image();
+const HeadLeft: HTMLImageElement = new Image();
+const HeadRight: HTMLImageElement = new Image();
+
+    //The source for the images
+HeadUp.src = "Bilder/HeadUp.png"
+HeadRight.src = "Bilder/HeadRight.png"
+HeadDown.src = "Bilder/HeadDown.png"
+HeadLeft.src = "Bilder/HeadLeft.png"
+
+// Food position on board
+let foodX: number;
+let foodY: number;
+
 // Game logic
-var scoreCounter = document.createElement("div");
-var score = 0;
-var hasTurned = true;
-var GameOver = false;
-var HeadUp = new Image();
-var HeadDown = new Image();
-var HeadLeft = new Image();
-var HeadRight = new Image();
-HeadUp.src = "Bilder/HeadUp.png";
-HeadRight.src = "Bilder/HeadRight.png";
-HeadDown.src = "Bilder/HeadDown.png";
-HeadLeft.src = "Bilder/HeadLeft.png";
+    //HTML div element created dynamically. Will be used to display the score of the game
+const scoreCounter: HTMLDivElement = document.createElement("div");
+
+    //Initiated score 0
+let score: number = 0;
+
+    //Game will stop when true
+let GameOver: boolean = false;
+
+//This will run once when the entire HTML document has finished loading.
 window.onload = function () {
-    board = document.getElementById("board");
+
+    //Retrieves the HTML element with the ID "board"
+    board = document.getElementById("board") as HTMLCanvasElement;
+
+    //Height and width of the board
     board.height = rows * blockSize;
     board.width = cols * blockSize;
-    context = board.getContext("2d"); // Draws on the board
+    
+    //retrieves the 2D drawing context of the canvas and provides 2D drawing functions for the canvas.
+    context = board.getContext("2d") as CanvasRenderingContext2D; 
+    
+    //Spawns the food
     spawnFood();
-    if (hasTurned) {
-        hasTurned = false;
-        document.addEventListener("keydown", changeDirection);
-    }
+
+    //When a key is pressed down, changeDirection() will be called.
+    document.addEventListener("keydown", changeDirection);
+
+    //Frame rate and speed of snake
     setInterval(update, 1000 / 10);
+
+    //Visuals for score counter
     scoreCounter.style.position = "absolute";
     scoreCounter.style.top = "90px";
     scoreCounter.style.left = "400px";
     scoreCounter.style.color = "white";
     scoreCounter.style.fontFamily = "Press Start 2P, monospace";
     scoreCounter.style.fontSize = "20px";
+
     scoreCounter.textContent = "SCORE: " + score;
+
     // Append the score counter element to the board container
     document.body.appendChild(scoreCounter);
-    var restartButton = document.createElement("button");
+
+    const restartButton: HTMLButtonElement = document.createElement("button");
     restartButton.textContent = "RESTART";
     restartButton.style.position = "absolute";
     restartButton.style.top = "90px";
@@ -58,14 +97,17 @@ window.onload = function () {
     restartButton.style.cursor = "pointer";
     restartButton.style.color = "white";
     restartButton.style.backgroundColor = "transparent"; // Set background color to transparent
+
     restartButton.addEventListener("click", function () {
         location.reload(); // Reload the page to restart the game
     });
+
     document.body.appendChild(restartButton);
-};
-function update() {
+}
+
+function update(): void {
     if (GameOver) {
-        var gameOver = document.createElement("div");
+        const gameOver: HTMLDivElement = document.createElement("div");
         gameOver.textContent = "GAME OVER";
         gameOver.style.position = "absolute";
         gameOver.style.top = "250px";
@@ -73,55 +115,66 @@ function update() {
         gameOver.style.color = "white";
         gameOver.style.fontFamily = "Press Start 2P, monospace";
         gameOver.style.fontSize = "100px";
+
         document.body.appendChild(gameOver);
+
         return;
     }
+
     // Make the board
     context.fillStyle = "rgb(0, 51, 102)";
-    context.fillRect(0, 0, board.width, board.height);
+    context.fillRect(0, 0, board.width, board.height)
+
     // Paint the food
     context.fillStyle = "red";
     context.beginPath();
     context.arc(foodX, foodY, blockSize / 2, 0, Math.PI * 2);
     context.fill();
+
     // Eat the food
     if (snakeX == foodX - blockSize / 2 && snakeY == foodY - blockSize / 2) {
         snakebody.push([foodX, foodY]);
         scoreUpdate();
         spawnFood();
     }
+
     // Make body follow head
-    for (var i = snakebody.length - 1; i > 0; i--) {
+    for (let i = snakebody.length - 1; i > 0; i--) {
         snakebody[i] = snakebody[i - 1];
     }
     if (snakebody.length) {
         snakebody[0] = [snakeX, snakeY];
     }
+
     // Paint snake body
-    for (var i = 0; i < snakebody.length; i++) {
-        var color = gradient(i);
+    for (let i = 0; i < snakebody.length; i++) {
+        let color: string = gradient(i);
         context.fillStyle = color;
         context.fillRect(snakebody[i][0], snakebody[i][1], blockSize, blockSize);
     }
+
     // Paint snake head
     snakeX += velocityX * blockSize;
     snakeY += velocityY * blockSize;
     drawSnakeHead();
+
     if (snakeX < 0 || snakeX > (cols - 1) * blockSize || snakeY < 0 || snakeY > (cols - 1) * blockSize) {
         GameOver = true;
     }
-    for (var i = 0; i < snakebody.length; i++) {
+    for (let i = 0; i < snakebody.length; i++) {
         if (snakeX == snakebody[i][0] && snakeY == snakebody[i][1]) {
             GameOver = true;
         }
     }
     hasTurned = true;
 }
-function scoreUpdate() {
+
+function scoreUpdate(): void {
     score += Math.floor(Math.random() * 5 + 5);
     scoreCounter.textContent = "SCORE: " + score;
 }
-function drawSnakeHead() {
+
+function drawSnakeHead(): void {
     switch (snakeDirection) {
         case "up":
             context.drawImage(HeadUp, snakeX, snakeY, blockSize, blockSize);
@@ -137,7 +190,8 @@ function drawSnakeHead() {
             break;
     }
 }
-function changeDirection(e) {
+
+function changeDirection(e: KeyboardEvent): void {
     if (e.code == "ArrowUp" && velocityY != 1) {
         snakeDirection = "up";
         velocityX = 0;
@@ -159,17 +213,19 @@ function changeDirection(e) {
         velocityY = 0;
     }
 }
-function spawnFood() {
+
+function spawnFood(): void {
     foodX = Math.floor(Math.random() * cols) * blockSize + blockSize / 2;
     foodY = Math.floor(Math.random() * rows) * blockSize + blockSize / 2;
-    for (var i = snakebody.length; i > 0; i--) {
+    for (let i = snakebody.length; i > 0; i--) {
         if (foodX == snakebody[i][0] && foodY == snakebody[i][1] || foodX == snakeX && foodY == snakeY) {
             spawnFood();
         }
     }
 }
-function gradient(distanceFromHead) {
-    var green = 150 - distanceFromHead * 3;
-    var red = Math.min(100, distanceFromHead * 3);
-    return "rgb(".concat(red, ", ").concat(green, ", 0)");
+
+function gradient(distanceFromHead: number): string {
+    let green: number = 150 - distanceFromHead * 3;
+    let red: number = Math.min(100, distanceFromHead * 3);
+    return `rgb(${red}, ${green}, 0)`;
 }
