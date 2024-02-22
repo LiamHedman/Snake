@@ -87,6 +87,7 @@ window.onload = function () {
     // Append the score counter element to the board container
     document.body.appendChild(scoreCounter);
 
+    //Create reastartbutton and vishuals
     const restartButton: HTMLButtonElement = document.createElement("button");
     restartButton.textContent = "RESTART";
     restartButton.style.position = "absolute";
@@ -96,17 +97,23 @@ window.onload = function () {
     restartButton.style.fontSize = "16px";
     restartButton.style.cursor = "pointer";
     restartButton.style.color = "white";
-    restartButton.style.backgroundColor = "transparent"; // Set background color to transparent
+    restartButton.style.backgroundColor = "transparent";
 
+    //Event listener detecting click on restartbutton
     restartButton.addEventListener("click", function () {
         location.reload(); // Reload the page to restart the game
     });
 
+    // Append the restart button element to the board container
     document.body.appendChild(restartButton);
 }
 
+//Will run every "frame"
 function update(): void {
+
     if (GameOver) {
+        
+        //Creates game over text and vishuals
         const gameOver: HTMLDivElement = document.createElement("div");
         gameOver.textContent = "GAME OVER";
         gameOver.style.position = "absolute";
@@ -116,16 +123,18 @@ function update(): void {
         gameOver.style.fontFamily = "Press Start 2P, monospace";
         gameOver.style.fontSize = "100px";
 
+        // Append the game over text element to the board container
         document.body.appendChild(gameOver);
 
+        //Stops the game loop
         return;
     }
 
-    // Make the board
+    // Color in the board
     context.fillStyle = "rgb(0, 51, 102)";
     context.fillRect(0, 0, board.width, board.height)
 
-    // Paint the food
+    // Color in the food
     context.fillStyle = "red";
     context.beginPath();
     context.arc(foodX, foodY, blockSize / 2, 0, Math.PI * 2);
@@ -146,18 +155,19 @@ function update(): void {
         snakebody[0] = [snakeX, snakeY];
     }
 
-    // Paint snake body
+    // Color in the snake body
     for (let i = 0; i < snakebody.length; i++) {
         let color: string = gradient(i);
         context.fillStyle = color;
         context.fillRect(snakebody[i][0], snakebody[i][1], blockSize, blockSize);
     }
 
-    // Paint snake head
+    // Color in the snake head
     snakeX += velocityX * blockSize;
     snakeY += velocityY * blockSize;
     drawSnakeHead();
 
+    //Set game to game over if relevant
     if (snakeX < 0 || snakeX > (cols - 1) * blockSize || snakeY < 0 || snakeY > (cols - 1) * blockSize) {
         GameOver = true;
     }
@@ -166,14 +176,15 @@ function update(): void {
             GameOver = true;
         }
     }
-    hasTurned = true;
 }
 
+//Increases the score with a random number between 5 and 10
 function scoreUpdate(): void {
     score += Math.floor(Math.random() * 5 + 5);
     scoreCounter.textContent = "SCORE: " + score;
 }
 
+//Loads the correct imiage of the snake head depending on the direction
 function drawSnakeHead(): void {
     switch (snakeDirection) {
         case "up":
@@ -191,6 +202,7 @@ function drawSnakeHead(): void {
     }
 }
 
+//Chnges the direction of the snake 
 function changeDirection(e: KeyboardEvent): void {
     if (e.code == "ArrowUp" && velocityY != 1) {
         snakeDirection = "up";
@@ -214,6 +226,7 @@ function changeDirection(e: KeyboardEvent): void {
     }
 }
 
+//Spawns food in random position
 function spawnFood(): void {
     foodX = Math.floor(Math.random() * cols) * blockSize + blockSize / 2;
     foodY = Math.floor(Math.random() * rows) * blockSize + blockSize / 2;
@@ -224,6 +237,7 @@ function spawnFood(): void {
     }
 }
 
+//Changes the gradient of the snake body
 function gradient(distanceFromHead: number): string {
     let green: number = 150 - distanceFromHead * 3;
     let red: number = Math.min(100, distanceFromHead * 3);
