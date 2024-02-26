@@ -80,13 +80,12 @@ window.onload = function () {
     setInterval(update, 1000 / 10);
 
     //Visuals for score counter
-    scoreCounter.style.position = "absolute";
-    scoreCounter.style.top = "90px";
-    scoreCounter.style.left = "400px";
-    scoreCounter.style.color = "white";
+    scoreCounter.style.position = "relative";
+    scoreCounter.style.top = "0";
+    scoreCounter.style.left = "0";
+    scoreCounter.style.color = "black";
     scoreCounter.style.fontFamily = "Press Start 2P, monospace";
     scoreCounter.style.fontSize = "20px";
-
     scoreCounter.textContent = "SCORE: " + score;
 
     // Append the score counter element to the board container
@@ -95,9 +94,9 @@ window.onload = function () {
     //Create reastartbutton and vishuals
     const restartButton: HTMLButtonElement = document.createElement("button");
     restartButton.textContent = "RESTART";
-    restartButton.style.position = "absolute";
-    restartButton.style.top = "90px";
-    restartButton.style.right = "395px";
+    restartButton.style.position = "relative";
+    restartButton.style.top = "-520px";
+    restartButton.style.right = "-180px";
     restartButton.style.padding = "5px 10px";
     restartButton.style.fontSize = "16px";
     restartButton.style.cursor = "pointer";
