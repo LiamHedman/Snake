@@ -1,3 +1,5 @@
+let interval;
+
 // Board variables
 const blockSize: number = 25;
 
@@ -77,7 +79,7 @@ window.onload = function () {
     document.addEventListener("keydown", changeDirection);
 
     //Frame rate and speed of snake
-    setInterval(update, 1000 / 10);
+    interval = setInterval(update, 1000 / 10);
 
     //Visuals for score counter
     scoreCounter.style.position = "relative";
@@ -114,21 +116,22 @@ window.onload = function () {
 
 //Will run every "frame"
 function update(): void {
-
     if (GameOver) {
         
         //Creates game over text and vishuals
         const gameOver: HTMLDivElement = document.createElement("div");
         gameOver.textContent = "GAME OVER";
-        gameOver.style.position = "absolute";
-        gameOver.style.top = "250px";
-        gameOver.style.left = "420px";
+        gameOver.style.position = "relative";
+        gameOver.style.top = "-380px";
+        gameOver.style.left = "0";
         gameOver.style.color = "white";
         gameOver.style.fontFamily = "Press Start 2P, monospace";
         gameOver.style.fontSize = "100px";
 
         // Append the game over text element to the board container
         document.body.appendChild(gameOver);
+        
+        clearInterval(interval)
 
         //Stops the game loop
         return;
