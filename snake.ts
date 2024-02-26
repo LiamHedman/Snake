@@ -14,6 +14,7 @@ let context: CanvasRenderingContext2D;
 
 // Snake variables
 let snakeDirection: string = "up";
+let has_turned: boolean = false;
 
     //Snake head
 let snakeX: number = blockSize * 9;
@@ -129,6 +130,7 @@ function update(): void {
         //Stops the game loop
         return;
     }
+    has_turned = false;
 
     // Color in the board
     context.fillStyle = "rgb(0, 51, 102)";
@@ -204,26 +206,31 @@ function drawSnakeHead(): void {
 
 //Chnges the direction of the snake 
 function changeDirection(e: KeyboardEvent): void {
-    if (e.code == "ArrowUp" && velocityY != 1) {
-        snakeDirection = "up";
-        velocityX = 0;
-        velocityY = -1;
+    if (!has_turned) {
+        if (e.code == "ArrowUp" && velocityY != 1) {
+            snakeDirection = "up";
+            velocityX = 0;
+            velocityY = -1;
+        }
+        else if (e.code == "ArrowDown" && velocityY != -1) {
+            snakeDirection = "down";
+            velocityX = 0;
+            velocityY = 1;
+        }
+        else if (e.code == "ArrowRight" && velocityX != -1) {
+            snakeDirection = "right";
+            velocityX = 1;
+            velocityY = 0;
+        }
+        else if (e.code == "ArrowLeft" && velocityX != 1) {
+            snakeDirection = "left";
+            velocityX = -1;
+            velocityY = 0;
+        }
     }
-    else if (e.code == "ArrowDown" && velocityY != -1) {
-        snakeDirection = "down";
-        velocityX = 0;
-        velocityY = 1;
-    }
-    else if (e.code == "ArrowRight" && velocityX != -1) {
-        snakeDirection = "right";
-        velocityX = 1;
-        velocityY = 0;
-    }
-    else if (e.code == "ArrowLeft" && velocityX != 1) {
-        snakeDirection = "left";
-        velocityX = -1;
-        velocityY = 0;
-    }
+
+    has_turned = true;
+    
 }
 
 //Spawns food in random position
