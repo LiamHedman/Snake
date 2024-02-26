@@ -237,8 +237,10 @@ function changeDirection(e: KeyboardEvent): void {
 function spawnFood(): void {
     foodX = Math.floor(Math.random() * cols) * blockSize + blockSize / 2;
     foodY = Math.floor(Math.random() * rows) * blockSize + blockSize / 2;
-    for (let i = snakebody.length; i > 0; i--) {
-        if (foodX == snakebody[i][0] && foodY == snakebody[i][1] || foodX == snakeX && foodY == snakeY) {
+
+
+    for (let i = 0; i < snakebody.length; i++) {
+        if ((foodX == snakebody[i][0] && foodY == snakebody[i][1]) || (foodX == snakeX && foodY == snakeY)) {
             spawnFood();
         }
     }
