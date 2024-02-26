@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport", content="width=device-wdth, initial-scale=1.0">
+        <title>Snake menu</title>
+        <style>
+            body {
+            background-color: #292929;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            }
+            button:hover {
+                background-color: #0056b3;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>~WELCOME TO SNAKE~</h1>
+        <button onclick="classic()">Classic mode</button>
+        <script>
+            function classic() {
+                //Redirect to classig game mode (HTML file)
+                window.location.href = "Classic game/index.html";
+            }
+        </script>
+    </body>
+</html>
