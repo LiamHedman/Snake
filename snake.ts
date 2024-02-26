@@ -130,7 +130,7 @@ function update(): void {
         //Stops the game loop
         return;
     }
-    has_turned = false;
+    
 
     // Color in the board
     context.fillStyle = "rgb(0, 51, 102)";
@@ -178,6 +178,8 @@ function update(): void {
             GameOver = true;
         }
     }
+    
+    has_turned = false;
 }
 
 //Increases the score with a random number between 5 and 10
@@ -228,9 +230,7 @@ function changeDirection(e: KeyboardEvent): void {
             velocityY = 0;
         }
     }
-
     has_turned = true;
-    
 }
 
 //Spawns food in random position
