@@ -13,19 +13,23 @@ let board: HTMLCanvasElement;
 let context: CanvasRenderingContext2D;
 
 // Snake variables
-let snakeDirection: string = "up";
-let has_turned: boolean = false;
+type cords = [number, number];
+type snake = {snake_direction: "up" | "down" | "left" | "right", 
+              velocityX: number,
+              velocityY: number,
+              has_turned: boolean,
+              snake_body: Array<cords>,
+              headX: number
+              headY: number}
 
-    //Snake head
-let snakeX: number = blockSize * 9;
-let snakeY: number = blockSize * 9;
+let player: snake = {snake_direction: "up", 
+                     velocityX: 0, 
+                     velocityY: 0, 
+                     has_turned: false, 
+                     snake_body: [],
+                     headX: 9,
+                     headY: 9}
 
-    //Snake body (array of coordinates)
-const snakebody: [number, number][] = [];
-
-    //Directional movement of snake
-let velocityX: number = 0;
-let velocityY: number = 0;
 
     //Pictures of the snake's head
 const HeadUp: HTMLImageElement = new Image();
@@ -139,47 +143,55 @@ function update(): void {
     // Color in the food
     context.fillStyle = "red";
     context.beginPath();
-    context.arc(foodX, foodY, blockSize / 2, 0, Math.PI * 2);
+    context.arc(foodX * blockSize + blockSize / 2,
+                foodY * blockSize + blockSize / 2, 
+                blockSize / 2,
+                0,
+                Math.PI * 2);
     context.fill();
 
     // Eat the food
-    if (snakeX == foodX - blockSize / 2 && snakeY == foodY - blockSize / 2) {
-        snakebody.push([foodX, foodY]);
+    if (player.headX == foodX && player.headY == foodY) {
+        
+        player.snake_body.push([foodX, foodY]);
         scoreUpdate();
         spawnFood();
     }
 
     // Make body follow head
-    for (let i = snakebody.length - 1; i > 0; i--) {
-        snakebody[i] = snakebody[i - 1];
+    for (let i = player.snake_body.length - 1; i > 0; i--) {
+        player.snake_body[i] = player.snake_body[i - 1];
     }
-    if (snakebody.length) {
-        snakebody[0] = [snakeX, snakeY];
+    if (player.snake_body.length) {
+        player.snake_body[0] = [player.headX, player.headY];
     }
 
     // Color in the snake body
-    for (let i = 0; i < snakebody.length; i++) {
+    for (let i = 0; i < player.snake_body.length; i++) {
         let color: string = gradient(i);
         context.fillStyle = color;
-        context.fillRect(snakebody[i][0], snakebody[i][1], blockSize, blockSize);
+        context.fillRect(player.snake_body[i][0] * blockSize, 
+                         player.snake_body[i][1] * blockSize, 
+                         blockSize, 
+                         blockSize);
     }
 
-    // Color in the snake head
-    snakeX += velocityX * blockSize;
-    snakeY += velocityY * blockSize;
+    // Move the head
+    player.headX += player.velocityX;
+    player.headY += player.velocityY;
     drawSnakeHead();
 
     //Set game to game over if relevant
-    if (snakeX < 0 || snakeX > (cols - 1) * blockSize || snakeY < 0 || snakeY > (cols - 1) * blockSize) {
+    if (player.headX < 0 || player.headX > (cols - 1) || player.headY < 0 || player.headY > (cols - 1)) {
         GameOver = true;
     }
-    for (let i = 0; i < snakebody.length; i++) {
-        if (snakeX == snakebody[i][0] && snakeY == snakebody[i][1]) {
+    for (let i = 0; i < player.snake_body.length; i++) {
+        if (player.headX == player.snake_body[i][0] && player.headY == player.snake_body[i][1]) {
             GameOver = true;
         }
     }
     
-    has_turned = false;
+    player.has_turned = false;
 }
 
 //Increases the score with a random number between 5 and 10
@@ -190,57 +202,71 @@ function scoreUpdate(): void {
 
 //Loads the correct imiage of the snake head depending on the direction
 function drawSnakeHead(): void {
-    switch (snakeDirection) {
+    switch (player.snake_direction) {
         case "up":
-            context.drawImage(HeadUp, snakeX, snakeY, blockSize, blockSize);
+            context.drawImage(HeadUp, player.headX * blockSize, 
+                              player.headY * blockSize, 
+                              blockSize, 
+                              blockSize);
             break;
         case "down":
-            context.drawImage(HeadDown, snakeX, snakeY, blockSize, blockSize);
+            context.drawImage(HeadDown, player.headX * blockSize, 
+                              player.headY * blockSize, 
+                              blockSize, 
+                              blockSize);
             break;
         case "left":
-            context.drawImage(HeadLeft, snakeX, snakeY, blockSize, blockSize);
+            context.drawImage(HeadLeft, 
+                              player.headX * blockSize,
+                              player.headY * blockSize,
+                              blockSize,
+                              blockSize);
             break;
         case "right":
-            context.drawImage(HeadRight, snakeX, snakeY, blockSize, blockSize);
+            context.drawImage(HeadRight,
+                              player.headX * blockSize,
+                              player.headY * blockSize,
+                              blockSize,
+                              blockSize);
             break;
     }
 }
 
 //Chnges the direction of the snake 
 function changeDirection(e: KeyboardEvent): void {
-    if (!has_turned) {
-        if (e.code == "ArrowUp" && velocityY != 1) {
-            snakeDirection = "up";
-            velocityX = 0;
-            velocityY = -1;
+    if (!player.has_turned) {
+        if (e.code == "ArrowUp" && player.velocityY != 1) {
+            player.snake_direction = "up";
+            player.velocityX = 0;
+            player.velocityY = -1;
         }
-        else if (e.code == "ArrowDown" && velocityY != -1) {
-            snakeDirection = "down";
-            velocityX = 0;
-            velocityY = 1;
+        else if (e.code == "ArrowDown" && player.velocityY != -1) {
+            player.snake_direction = "down";
+            player.velocityX = 0;
+            player.velocityY = 1;
         }
-        else if (e.code == "ArrowRight" && velocityX != -1) {
-            snakeDirection = "right";
-            velocityX = 1;
-            velocityY = 0;
+        else if (e.code == "ArrowRight" && player.velocityX != -1) {
+            player.snake_direction = "right";
+            player.velocityX = 1;
+            player.velocityY = 0;
         }
-        else if (e.code == "ArrowLeft" && velocityX != 1) {
-            snakeDirection = "left";
-            velocityX = -1;
-            velocityY = 0;
+        else if (e.code == "ArrowLeft" && player.velocityX != 1) {
+            player.snake_direction = "left";
+            player.velocityX = -1;
+            player.velocityY = 0;
         }
     }
-    has_turned = true;
+    player.has_turned = true;
 }
 
 //Spawns food in random position
 function spawnFood(): void {
-    foodX = Math.floor(Math.random() * cols) * blockSize + blockSize / 2;
-    foodY = Math.floor(Math.random() * rows) * blockSize + blockSize / 2;
+    foodX = Math.floor(Math.random() * cols);
+    foodY = Math.floor(Math.random() * rows);
 
-
-    for (let i = 0; i < snakebody.length; i++) {
-        if ((foodX == snakebody[i][0] && foodY == snakebody[i][1]) || (foodX == snakeX && foodY == snakeY)) {
+    for (let i = 0; i < player.snake_body.length; i++) {
+        if ((foodX == player.snake_body[i][0] && foodY == player.snake_body[i][1]) || 
+            (foodX == player.headX && foodY == player.headY)) {
             spawnFood();
         }
     }
