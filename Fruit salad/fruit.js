@@ -27,8 +27,8 @@ HeadRight.src = "../Bilder/HeadRight.png";
 HeadDown.src = "../Bilder/HeadDown.png";
 HeadLeft.src = "../Bilder/HeadLeft.png";
 // Food position on board
-var foodX;
-var foodY;
+var red_food_x;
+var red_food_y;
 // Game logic
 //HTML div element created dynamically. Will be used to display the score of the game
 var scoreCounter = document.createElement("div");
@@ -103,11 +103,11 @@ function update() {
     // Color in the food
     context.fillStyle = "red";
     context.beginPath();
-    context.arc(foodX * blockSize + blockSize / 2, foodY * blockSize + blockSize / 2, blockSize / 2, 0, Math.PI * 2);
+    context.arc(red_food_x * blockSize + blockSize / 2, red_food_y * blockSize + blockSize / 2, blockSize / 2, 0, Math.PI * 2);
     context.fill();
     // Eat the food
-    if (player.headX == foodX && player.headY == foodY) {
-        player.snake_body.push([foodX, foodY]);
+    if (player.headX == red_food_x && player.headY == red_food_y) {
+        player.snake_body.push([red_food_x, red_food_y]);
         scoreUpdate();
         spawnFood();
     }
@@ -189,11 +189,11 @@ function changeDirection(e) {
 }
 //Spawns food in random position
 function spawnFood() {
-    foodX = Math.floor(Math.random() * cols);
-    foodY = Math.floor(Math.random() * rows);
+    red_food_x = Math.floor(Math.random() * cols);
+    red_food_y = Math.floor(Math.random() * rows);
     for (var i = 0; i < player.snake_body.length; i++) {
-        if ((foodX == player.snake_body[i][0] && foodY == player.snake_body[i][1]) ||
-            (foodX == player.headX && foodY == player.headY)) {
+        if ((red_food_x == player.snake_body[i][0] && red_food_y == player.snake_body[i][1]) ||
+            (red_food_x == player.headX && red_food_y == player.headY)) {
             spawnFood();
         }
     }

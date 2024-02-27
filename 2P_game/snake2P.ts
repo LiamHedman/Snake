@@ -48,10 +48,10 @@ const HeadLeft: HTMLImageElement = new Image();
 const HeadRight: HTMLImageElement = new Image();
 
     //The source for the images
-HeadUp.src = "../Classic game/Bilder/HeadUp.png"
-HeadRight.src = "../Classic game/Bilder/HeadRight.png"
-HeadDown.src = "../Classic game/Bilder/HeadDown.png"
-HeadLeft.src = "../Classic game/Bilder/HeadLeft.png"
+HeadUp.src = "../Bilder/HeadUp.png"
+HeadRight.src = "../Bilder/HeadRight.png"
+HeadDown.src = "../Bilder/HeadDown.png"
+HeadLeft.src = "../Bilder/HeadLeft.png"
 
 // Food position on board
 let foodX: number;

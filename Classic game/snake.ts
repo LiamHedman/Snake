@@ -21,7 +21,7 @@ type snake = {snake_direction: "up" | "down" | "left" | "right",
               velocityY: number,
               has_turned: boolean,
               snake_body: Array<cords>,
-              headX: number
+              headX: number,
               headY: number}
 
 let player: snake = {snake_direction: "up", 
@@ -40,11 +40,11 @@ const HeadLeft: HTMLImageElement = new Image();
 const HeadRight: HTMLImageElement = new Image();
 
     //The source for the images
-HeadUp.src = "Bilder/HeadUp.png"
-HeadRight.src = "Bilder/HeadRight.png"
-HeadDown.src = "Bilder/HeadDown.png"
-HeadLeft.src = "Bilder/HeadLeft.png"
-
+HeadUp.src = "../Bilder/HeadUp.png"
+HeadRight.src = "../Bilder/HeadRight.png"
+HeadDown.src = "../Bilder/HeadDown.png"
+HeadLeft.src = "../Bilder/HeadLeft.png"
+    
 // Food position on board
 let foodX: number;
 let foodY: number;

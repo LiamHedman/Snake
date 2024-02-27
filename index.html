@@ -1,29 +1,65 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport", content="width=device-wdth, initial-scale=1.0">
-        <title>Snake menu</title>
-        <style>
-            body {
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport", content="width=device-wdth, initial-scale=1.0">
+    <title>Snake menu</title>
+    <style>
+        body {
             background-color: #003366;
             color: white;
             font-family: Arial, sans-serif;
             text-align: center;
-            }
-            button:hover {
-                background-color: #0056b3;
-            }
-        </style>
-    </head>
-    <body>
-        <h1>~WELCOME TO SNAKE~</h1>
-        <button onclick="classic()">Classic mode</button>
-        <script>
-            function classic() {
-                //Redirect to classig game mode (HTML file)
-                window.location.href = "Classic game/classic.html";
-            }
-        </script>
-    </body>
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+        }
+        button:hover {
+            background-color: #1a89ff;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button {
+            width: 200px;
+            margin: 10px auto;
+            display: block;
+            background-color: #006bde;
+            color: white;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>~WELCOME TO SNAKE~</h1>
+
+    <div>
+        <button onclick="classic()">Single player</button>
+    </div>
+
+    <div>
+        <button onclick="two_player()">Two players</button>
+    </div>
+    
+    <div>
+        <button onclick="fruit_salad()">Fruit salad</button>
+    </div>
+    
+    <script>
+        function classic() {
+            //Redirect to classic game mode (HTML file)
+            window.location.href = "Classic game/classic.html";
+        }
+
+        function two_player() {
+            window.location.href = "2P_game/snake2P.html";
+        }
+
+        function fruit_salad() {
+            window.location.href = "Fruit salad/fruit.html"
+        }
+    </script>
+</body>
 </html>

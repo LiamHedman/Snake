@@ -1,56 +1,86 @@
-var interval;
+let interval;
+
 // Board variables
-var blockSize = 25;
-//Board dimensions
-var rows = 20;
-var cols = 20;
-//The board (drawable region in HTML)
-var board;
-//Provides the 2D rendering context for the drawing surface the canvas element. 
-//Contains methods and properties that allow drawing shapes, text, images, etc. 
-var context;
-var player = { snake_direction: "up",
-    velocityX: 0,
-    velocityY: 0,
-    has_turned: false,
-    snake_body: [],
-    headX: 9,
-    headY: 9 };
-//Pictures of the snake's head
-var HeadUp = new Image();
-var HeadDown = new Image();
-var HeadLeft = new Image();
-var HeadRight = new Image();
-//The source for the images
-HeadUp.src = "../Bilder/HeadUp.png";
-HeadRight.src = "../Bilder/HeadRight.png";
-HeadDown.src = "../Bilder/HeadDown.png";
-HeadLeft.src = "../Bilder/HeadLeft.png";
+const blockSize: number = 25;
+
+    //Board dimensions
+const rows: number = 20;
+const cols: number = 20;
+
+    //The board (drawable region in HTML)
+let board: HTMLCanvasElement;
+
+    //Provides the 2D rendering context for the drawing surface the canvas element. 
+    //Contains methods and properties that allow drawing shapes, text, images, etc. 
+let context: CanvasRenderingContext2D;
+
+// Snake variables
+type cords = [number, number];
+type snake = {snake_direction: "up" | "down" | "left" | "right", 
+              velocityX: number,
+              velocityY: number,
+              has_turned: boolean,
+              snake_body: Array<cords>,
+              headX: number,
+              headY: number}
+
+let player: snake = {snake_direction: "up", 
+                     velocityX: 0, 
+                     velocityY: 0, 
+                     has_turned: false, 
+                     snake_body: [],
+                     headX: 9,
+                     headY: 9}
+
+
+    //Pictures of the snake's head
+const HeadUp: HTMLImageElement = new Image();
+const HeadDown: HTMLImageElement = new Image();
+const HeadLeft: HTMLImageElement = new Image();
+const HeadRight: HTMLImageElement = new Image();
+
+    //The source for the images
+    HeadUp.src = "../Bilder/HeadUp.png"
+    HeadRight.src = "../Bilder/HeadRight.png"
+    HeadDown.src = "../Bilder/HeadDown.png"
+    HeadLeft.src = "../Bilder/HeadLeft.png"
+        
 // Food position on board
-var foodX;
-var foodY;
+let red_food_x: number;
+let red_food_y: number;
+
 // Game logic
-//HTML div element created dynamically. Will be used to display the score of the game
-var scoreCounter = document.createElement("div");
-//Initiated score 0
-var score = 0;
-//Game will stop when true
-var GameOver = false;
+    //HTML div element created dynamically. Will be used to display the score of the game
+const scoreCounter: HTMLDivElement = document.createElement("div");
+
+    //Initiated score 0
+let score: number = 0;
+
+    //Game will stop when true
+let GameOver: boolean = false;
+
 //This will run once when the entire HTML document has finished loading.
 window.onload = function () {
+
     //Retrieves the HTML element with the ID "board"
-    board = document.getElementById("board");
+    board = document.getElementById("board") as HTMLCanvasElement;
+
     //Height and width of the board
     board.height = rows * blockSize;
     board.width = cols * blockSize;
+    
     //retrieves the 2D drawing context of the canvas and provides 2D drawing functions for the canvas.
-    context = board.getContext("2d");
+    context = board.getContext("2d") as CanvasRenderingContext2D; 
+    
     //Spawns the food
     spawnFood();
+
     //When a key is pressed down, changeDirection() will be called.
     document.addEventListener("keydown", changeDirection);
+
     //Frame rate and speed of snake
     interval = setInterval(update, 1000 / 10);
+
     //Visuals for score counter
     scoreCounter.style.position = "relative";
     scoreCounter.style.top = "0";
@@ -59,10 +89,12 @@ window.onload = function () {
     scoreCounter.style.fontFamily = "Press Start 2P, monospace";
     scoreCounter.style.fontSize = "20px";
     scoreCounter.textContent = "SCORE: " + score;
+
     // Append the score counter element to the board container
     document.body.appendChild(scoreCounter);
+
     //Create reastartbutton and vishuals
-    var restartButton = document.createElement("button");
+    const restartButton: HTMLButtonElement = document.createElement("button");
     restartButton.textContent = "RESTART";
     restartButton.style.position = "relative";
     restartButton.style.top = "-520px";
@@ -72,18 +104,22 @@ window.onload = function () {
     restartButton.style.cursor = "pointer";
     restartButton.style.color = "white";
     restartButton.style.backgroundColor = "transparent";
+
     //Event listener detecting click on restartbutton
     restartButton.addEventListener("click", function () {
         location.reload(); // Reload the page to restart the game
     });
+
     // Append the restart button element to the board container
     document.body.appendChild(restartButton);
-};
+}
+
 //Will run every "frame"
-function update() {
+function update(): void {
     if (GameOver) {
+        
         //Creates game over text and vishuals
-        var gameOver = document.createElement("div");
+        const gameOver: HTMLDivElement = document.createElement("div");
         gameOver.textContent = "GAME OVER";
         gameOver.style.position = "relative";
         gameOver.style.top = "-380px";
@@ -91,78 +127,115 @@ function update() {
         gameOver.style.color = "white";
         gameOver.style.fontFamily = "Press Start 2P, monospace";
         gameOver.style.fontSize = "100px";
+
         // Append the game over text element to the board container
         document.body.appendChild(gameOver);
-        clearInterval(interval);
+        
+        clearInterval(interval)
+
         //Stops the game loop
         return;
     }
+    
+
     // Color in the board
     context.fillStyle = "rgb(0, 51, 102)";
-    context.fillRect(0, 0, board.width, board.height);
+    context.fillRect(0, 0, board.width, board.height)
+
     // Color in the food
     context.fillStyle = "red";
     context.beginPath();
-    context.arc(foodX * blockSize + blockSize / 2, foodY * blockSize + blockSize / 2, blockSize / 2, 0, Math.PI * 2);
+    context.arc(red_food_x * blockSize + blockSize / 2,
+                red_food_y * blockSize + blockSize / 2, 
+                blockSize / 2,
+                0,
+                Math.PI * 2);
     context.fill();
+
     // Eat the food
-    if (player.headX == foodX && player.headY == foodY) {
-        player.snake_body.push([foodX, foodY]);
+    if (player.headX == red_food_x && player.headY == red_food_y) {
+        
+        player.snake_body.push([red_food_x, red_food_y]);
         scoreUpdate();
         spawnFood();
     }
+
     // Make body follow head
-    for (var i = player.snake_body.length - 1; i > 0; i--) {
+    for (let i = player.snake_body.length - 1; i > 0; i--) {
         player.snake_body[i] = player.snake_body[i - 1];
     }
     if (player.snake_body.length) {
         player.snake_body[0] = [player.headX, player.headY];
     }
+
     // Color in the snake body
-    for (var i = 0; i < player.snake_body.length; i++) {
-        var color = gradient(i);
+    for (let i = 0; i < player.snake_body.length; i++) {
+        let color: string = gradient(i);
         context.fillStyle = color;
-        context.fillRect(player.snake_body[i][0] * blockSize, player.snake_body[i][1] * blockSize, blockSize, blockSize);
+        context.fillRect(player.snake_body[i][0] * blockSize, 
+                         player.snake_body[i][1] * blockSize, 
+                         blockSize, 
+                         blockSize);
     }
+
     // Move the head
     player.headX += player.velocityX;
     player.headY += player.velocityY;
     drawSnakeHead();
+
     //Set game to game over if relevant
     if (player.headX < 0 || player.headX > (cols - 1) || player.headY < 0 || player.headY > (cols - 1)) {
         GameOver = true;
     }
-    for (var i = 0; i < player.snake_body.length; i++) {
+    for (let i = 0; i < player.snake_body.length; i++) {
         if (player.headX == player.snake_body[i][0] && player.headY == player.snake_body[i][1]) {
             GameOver = true;
         }
     }
+    
     player.has_turned = false;
 }
+
 //Increases the score with a random number between 5 and 10
-function scoreUpdate() {
+function scoreUpdate(): void {
     score += Math.floor(Math.random() * 5 + 5);
     scoreCounter.textContent = "SCORE: " + score;
 }
+
 //Loads the correct imiage of the snake head depending on the direction
-function drawSnakeHead() {
+function drawSnakeHead(): void {
     switch (player.snake_direction) {
         case "up":
-            context.drawImage(HeadUp, player.headX * blockSize, player.headY * blockSize, blockSize, blockSize);
+            context.drawImage(HeadUp, player.headX * blockSize, 
+                              player.headY * blockSize, 
+                              blockSize, 
+                              blockSize);
             break;
         case "down":
-            context.drawImage(HeadDown, player.headX * blockSize, player.headY * blockSize, blockSize, blockSize);
+            context.drawImage(HeadDown, player.headX * blockSize, 
+                              player.headY * blockSize, 
+                              blockSize, 
+                              blockSize);
             break;
         case "left":
-            context.drawImage(HeadLeft, player.headX * blockSize, player.headY * blockSize, blockSize, blockSize);
+            context.drawImage(HeadLeft, 
+                              player.headX * blockSize,
+                              player.headY * blockSize,
+                              blockSize,
+                              blockSize);
             break;
         case "right":
-            context.drawImage(HeadRight, player.headX * blockSize, player.headY * blockSize, blockSize, blockSize);
+            context.drawImage(HeadRight,
+                              player.headX * blockSize,
+                              player.headY * blockSize,
+                              blockSize,
+                              blockSize);
             break;
     }
 }
+
 //Chnges the direction of the snake 
-function changeDirection(e) {
+function changeDirection(e: KeyboardEvent): void {
     if (!player.has_turned) {
         if (e.code == "ArrowUp" && player.velocityY != 1) {
             player.snake_direction = "up";
@@ -187,20 +260,23 @@ function changeDirection(e) {
     }
     player.has_turned = true;
 }
+
 //Spawns food in random position
-function spawnFood() {
-    foodX = Math.floor(Math.random() * cols);
-    foodY = Math.floor(Math.random() * rows);
-    for (var i = 0; i < player.snake_body.length; i++) {
-        if ((foodX == player.snake_body[i][0] && foodY == player.snake_body[i][1]) ||
-            (foodX == player.headX && foodY == player.headY)) {
+function spawnFood(): void {
+    red_food_x = Math.floor(Math.random() * cols);
+    red_food_y = Math.floor(Math.random() * rows);
+
+    for (let i = 0; i < player.snake_body.length; i++) {
+        if ((red_food_x == player.snake_body[i][0] && red_food_y == player.snake_body[i][1]) || 
+            (red_food_x == player.headX && red_food_y == player.headY)) {
             spawnFood();
         }
     }
 }
+
 //Changes the gradient of the snake body
-function gradient(distanceFromHead) {
-    var green = 150 - distanceFromHead * 3;
-    var red = Math.min(100, distanceFromHead * 3);
-    return "rgb(".concat(red, ", ").concat(green, ", 0)");
+function gradient(distanceFromHead: number): string {
+    let green: number = 150 - distanceFromHead * 3;
+    let red: number = Math.min(100, distanceFromHead * 3);
+    return `rgb(${red}, ${green}, 0)`;
 }
