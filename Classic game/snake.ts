@@ -1,17 +1,17 @@
+// Board variables
 let interval;
 
-// Board variables
 const blockSize: number = 25;
 
-    //Board dimensions
+//Board dimensions
 const rows: number = 20;
 const cols: number = 20;
 
-    //The board (drawable region in HTML)
+//The board (drawable region in HTML)
 let board: HTMLCanvasElement;
 
-    //Provides the 2D rendering context for the drawing surface the canvas element. 
-    //Contains methods and properties that allow drawing shapes, text, images, etc. 
+//Provides the 2D rendering context for the drawing surface the canvas element. 
+//Contains methods and properties that allow drawing shapes, text, images, etc. 
 let context: CanvasRenderingContext2D;
 
 // Snake variables
@@ -44,7 +44,7 @@ HeadUp.src = "../Bilder/HeadUp.png"
 HeadRight.src = "../Bilder/HeadRight.png"
 HeadDown.src = "../Bilder/HeadDown.png"
 HeadLeft.src = "../Bilder/HeadLeft.png"
-    
+
 // Food position on board
 let foodX: number;
 let foodY: number;

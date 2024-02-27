@@ -1,5 +1,5 @@
-var interval;
 // Board variables
+var interval;
 var blockSize = 25;
 //Board dimensions
 var rows = 20;
