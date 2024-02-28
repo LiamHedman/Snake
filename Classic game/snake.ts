@@ -1,21 +1,19 @@
 type intervalID = ReturnType<typeof setInterval>
 
 let interval: intervalID;
+>>>>>>> f6e927afeace22b6c1f063479579d2c605380890
 
-
-
-// Board variables
 const blockSize: number = 25;
 
-    //Board dimensions
+//Board dimensions
 const rows: number = 20;
 const cols: number = 20;
 
-    //The board (drawable region in HTML)
+//The board (drawable region in HTML)
 let board: HTMLCanvasElement;
 
-    //Provides the 2D rendering context for the drawing surface the canvas element. 
-    //Contains methods and properties that allow drawing shapes, text, images, etc. 
+//Provides the 2D rendering context for the drawing surface the canvas element. 
+//Contains methods and properties that allow drawing shapes, text, images, etc. 
 let context: CanvasRenderingContext2D;
 
 // Snake variables
@@ -48,7 +46,7 @@ HeadUp.src = "../Bilder/HeadUp.png"
 HeadRight.src = "../Bilder/HeadRight.png"
 HeadDown.src = "../Bilder/HeadDown.png"
 HeadLeft.src = "../Bilder/HeadLeft.png"
-    
+
 // Food position on board
 let foodX: number;
 let foodY: number;
@@ -296,6 +294,7 @@ function gradient(distanceFromHead: number): string {
     let green: number = 150 - distanceFromHead * 3;
     let red: number = Math.min(100, distanceFromHead * 3);
     return `rgb(${red}, ${green}, 0)`;
+<<<<<<< HEAD
 }
 
 window.addEventListener("keydown", (event) => {
@@ -320,4 +319,6 @@ function PauseGame() {
     
 function ResumeGame() {
     interval = setInterval(update, 1000 / 10);
+=======
+>>>>>>> f6e927afeace22b6c1f063479579d2c605380890
 }
