@@ -1,5 +1,7 @@
-// Board variables
-let interval;
+type intervalID = ReturnType<typeof setInterval>
+
+let interval: intervalID;
+
 
 const blockSize: number = 25;
 
@@ -57,7 +59,9 @@ const scoreCounter: HTMLDivElement = document.createElement("div");
 let score: number = 0;
 
     //Game will stop when true
-let GameOver: boolean = false;
+let dead: boolean = false;
+
+let pause: boolean = false;
 
 //This will run once when the entire HTML document has finished loading.
 window.onload = function () {
@@ -78,7 +82,7 @@ window.onload = function () {
     //When a key is pressed down, changeDirection() will be called.
     document.addEventListener("keydown", changeDirection);
 
-    //Frame rate and speed of snake
+    //Frame rate and speed of snake if not paused
     interval = setInterval(update, 1000 / 10);
 
     //Visuals for score counter
@@ -116,7 +120,12 @@ window.onload = function () {
 
 //Will run every "frame"
 function update(): void {
-    if (GameOver) {
+    //Game does not update when paused
+    if (pause) {
+        return;
+    }
+
+    if (dead) {
         
         //Creates game over text and vishuals
         const gameOver: HTMLDivElement = document.createElement("div");
@@ -136,6 +145,8 @@ function update(): void {
         //Stops the game loop
         return;
     }
+
+
     
 
     // Color in the board
@@ -178,6 +189,7 @@ function update(): void {
                          blockSize);
     }
 
+
     // Move the head
     player.headX += player.velocityX;
     player.headY += player.velocityY;
@@ -185,16 +197,19 @@ function update(): void {
 
     //Set game to game over if relevant
     if (player.headX < 0 || player.headX > (cols - 1) || player.headY < 0 || player.headY > (cols - 1)) {
-        GameOver = true;
+        dead = true;
     }
     for (let i = 0; i < player.snake_body.length; i++) {
         if (player.headX == player.snake_body[i][0] && player.headY == player.snake_body[i][1]) {
-            GameOver = true;
+            dead = true;
         }
     }
     
     player.has_turned = false;
 }
+
+
+
 
 //Increases the score with a random number between 5 and 10
 function scoreUpdate(): void {
@@ -279,4 +294,29 @@ function gradient(distanceFromHead: number): string {
     let green: number = 150 - distanceFromHead * 3;
     let red: number = Math.min(100, distanceFromHead * 3);
     return `rgb(${red}, ${green}, 0)`;
+
+}
+
+window.addEventListener("keydown", (event) => {
+    if (event.code === "Space") {
+        if (pause) {
+            ResumeGame(); // Resume game if paused 
+        } 
+        else {
+            PauseGame(); // Pause game if not paused
+        }
+        pause = !pause; // Toggle pause
+    }
+});
+
+function PauseGame() {
+    clearInterval(interval);
+    
+                const PauseMenu: HTMLDivElement = document.createElement("div");
+                PauseMenu.innerText = "Press SPACE to resume";
+                document.body.appendChild(PauseMenu);
+            }
+    
+function ResumeGame() {
+    interval = setInterval(update, 1000 / 10);
 }

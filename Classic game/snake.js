@@ -1,4 +1,3 @@
-// Board variables
 var interval;
 var blockSize = 25;
 //Board dimensions
@@ -35,7 +34,8 @@ var scoreCounter = document.createElement("div");
 //Initiated score 0
 var score = 0;
 //Game will stop when true
-var GameOver = false;
+var dead = false;
+var pause = false;
 //This will run once when the entire HTML document has finished loading.
 window.onload = function () {
     //Retrieves the HTML element with the ID "board"
@@ -49,7 +49,7 @@ window.onload = function () {
     spawnFood();
     //When a key is pressed down, changeDirection() will be called.
     document.addEventListener("keydown", changeDirection);
-    //Frame rate and speed of snake
+    //Frame rate and speed of snake if not paused
     interval = setInterval(update, 1000 / 10);
     //Visuals for score counter
     scoreCounter.style.position = "relative";
@@ -81,7 +81,11 @@ window.onload = function () {
 };
 //Will run every "frame"
 function update() {
-    if (GameOver) {
+    //Game does not update when paused
+    if (pause) {
+        return;
+    }
+    if (dead) {
         //Creates game over text and vishuals
         var gameOver = document.createElement("div");
         gameOver.textContent = "GAME OVER";
@@ -130,11 +134,11 @@ function update() {
     drawSnakeHead();
     //Set game to game over if relevant
     if (player.headX < 0 || player.headX > (cols - 1) || player.headY < 0 || player.headY > (cols - 1)) {
-        GameOver = true;
+        dead = true;
     }
     for (var i = 0; i < player.snake_body.length; i++) {
         if (player.headX == player.snake_body[i][0] && player.headY == player.snake_body[i][1]) {
-            GameOver = true;
+            dead = true;
         }
     }
     player.has_turned = false;
@@ -203,4 +207,24 @@ function gradient(distanceFromHead) {
     var green = 150 - distanceFromHead * 3;
     var red = Math.min(100, distanceFromHead * 3);
     return "rgb(".concat(red, ", ").concat(green, ", 0)");
+}
+window.addEventListener("keydown", function (event) {
+    if (event.code === "Space") {
+        if (pause) {
+            ResumeGame(); // Resume game if paused 
+        }
+        else {
+            PauseGame(); // Pause game if not paused
+        }
+        pause = !pause; // Toggle pause
+    }
+});
+function PauseGame() {
+    clearInterval(interval);
+    var PauseMenu = document.createElement("div");
+    PauseMenu.innerText = "Press SPACE to resume";
+    document.body.appendChild(PauseMenu);
+}
+function ResumeGame() {
+    interval = setInterval(update, 1000 / 10);
 }
