@@ -65,7 +65,6 @@ let dead: boolean = false;
 
 let pause: boolean = false;
 
-
 //This will run once when the entire HTML document has finished loading.
 window.onload = function () {
 
@@ -123,6 +122,10 @@ window.onload = function () {
 
 //Will run every "frame"
 function update(): void {
+    //Game does not update when paused
+    if (pause) {
+        return;
+    }
 
     if (dead) {
         
@@ -208,26 +211,7 @@ function update(): void {
 }
 
 
-window.addEventListener("keydown", (event) => {
-    if (event.code === "Space") {
-        //Pauses game and shows pause menu
-        if (!pause) {
-            clearInterval(interval);
 
-            const PauseMenu: HTMLDivElement = document.createElement("div");
-            PauseMenu.innerText = "Press SPACE to resume";
-            document.body.appendChild(PauseMenu);
-            
-            pause = true;
-        }
-
-        //Resumes game (hopefully)
-        else if (pause) {
-            interval = setInterval(update, 1000 / 10);
-            pause = false;
-        }
-    }
-})
 
 //Increases the score with a random number between 5 and 10
 function scoreUpdate(): void {
@@ -312,4 +296,28 @@ function gradient(distanceFromHead: number): string {
     let green: number = 150 - distanceFromHead * 3;
     let red: number = Math.min(100, distanceFromHead * 3);
     return `rgb(${red}, ${green}, 0)`;
+}
+
+window.addEventListener("keydown", (event) => {
+    if (event.code === "Space") {
+        if (pause) {
+            ResumeGame(); // Resume game if paused 
+        } 
+        else {
+            PauseGame(); // Pause game if not paused
+        }
+        pause = !pause; // Toggle pause
+    }
+});
+
+function PauseGame() {
+    clearInterval(interval);
+    
+                const PauseMenu: HTMLDivElement = document.createElement("div");
+                PauseMenu.innerText = "Press SPACE to resume";
+                document.body.appendChild(PauseMenu);
+            }
+    
+function ResumeGame() {
+    interval = setInterval(update, 1000 / 10);
 }
