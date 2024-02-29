@@ -1,23 +1,24 @@
-var interval;
-var winner = "none";
+"use strict";
+let interval;
+let winner = "none";
 // Board variables
-var blockSize = 25;
+const blockSize = 25;
 //Board dimensions
-var rows = 20;
-var cols = 20;
+const rows = 20;
+const cols = 20;
 //The board (drawable region in HTML)
-var board;
+let board;
 //Provides the 2D rendering context for the drawing surface the canvas element. 
 //Contains methods and properties that allow drawing shapes, text, images, etc. 
-var context;
-var player1 = { snake_direction: "right",
+let context;
+let player1 = { snake_direction: "right",
     velocityX: 0,
     velocityY: 0,
     has_turned: false,
     snake_body: [],
     headX: 0,
     headY: 0 };
-var player2 = { snake_direction: "left",
+let player2 = { snake_direction: "left",
     velocityX: 0,
     velocityY: 0,
     has_turned: false,
@@ -25,21 +26,29 @@ var player2 = { snake_direction: "left",
     headX: 19,
     headY: 0 };
 //Pictures of the snake's head
-var HeadUp = new Image();
-var HeadDown = new Image();
-var HeadLeft = new Image();
-var HeadRight = new Image();
+const HeadUp = new Image();
+const HeadDown = new Image();
+const HeadLeft = new Image();
+const HeadRight = new Image();
+const HeadUpRed = new Image();
+const HeadDownRed = new Image();
+const HeadLeftRed = new Image();
+const HeadRightRed = new Image();
 //The source for the images
 HeadUp.src = "../Bilder/HeadUp.png";
 HeadRight.src = "../Bilder/HeadRight.png";
 HeadDown.src = "../Bilder/HeadDown.png";
 HeadLeft.src = "../Bilder/HeadLeft.png";
+HeadUpRed.src = "../Bilder/HeadUp(red).png";
+HeadRightRed.src = "../Bilder/HeadRight(red).png";
+HeadDownRed.src = "../Bilder/HeadDown(red).png";
+HeadLeftRed.src = "../Bilder/HeadLeft(red).png";
 // Food position on board
-var foodX;
-var foodY;
+let foodX;
+let foodY;
 // Game logic
 //Game will stop when true
-var GameOver = false;
+let GameOver = false;
 //This will run once when the entire HTML document has finished loading.
 window.onload = function () {
     //Retrieves the HTML element with the ID "board"
@@ -56,7 +65,7 @@ window.onload = function () {
     //Frame rate and speed of snake
     interval = setInterval(update, 800 / 10);
     //Create reastartbutton and vishuals
-    var restartButton = document.createElement("button");
+    const restartButton = document.createElement("button");
     restartButton.textContent = "RESTART";
     restartButton.style.position = "relative";
     restartButton.style.top = "-520px";
@@ -77,7 +86,7 @@ window.onload = function () {
 function update() {
     if (GameOver) {
         //Creates game over text and vishuals
-        var gameOver = document.createElement("div");
+        const gameOver = document.createElement("div");
         gameOver.textContent = "GAME OVER";
         gameOver.style.position = "relative";
         gameOver.style.top = "-380px";
@@ -109,26 +118,26 @@ function update() {
         spawnFood();
     }
     // Make body follow head
-    for (var i = player1.snake_body.length - 1; i > 0; i--) {
+    for (let i = player1.snake_body.length - 1; i > 0; i--) {
         player1.snake_body[i] = player1.snake_body[i - 1];
     }
     if (player1.snake_body.length) {
         player1.snake_body[0] = [player1.headX, player1.headY];
     }
-    for (var i = player2.snake_body.length - 1; i > 0; i--) {
+    for (let i = player2.snake_body.length - 1; i > 0; i--) {
         player2.snake_body[i] = player2.snake_body[i - 1];
     }
     if (player2.snake_body.length) {
         player2.snake_body[0] = [player2.headX, player2.headY];
     }
     // Color in the snake body
-    for (var i = 0; i < player1.snake_body.length; i++) {
-        var color = gradient(i);
+    for (let i = 0; i < player1.snake_body.length; i++) {
+        let color = green_gradient(i);
         context.fillStyle = color;
         context.fillRect(player1.snake_body[i][0] * blockSize, player1.snake_body[i][1] * blockSize, blockSize, blockSize);
     }
-    for (var i = 0; i < player2.snake_body.length; i++) {
-        var color = gradient(i);
+    for (let i = 0; i < player2.snake_body.length; i++) {
+        let color = red_gradient(i);
         context.fillStyle = color;
         context.fillRect(player2.snake_body[i][0] * blockSize, player2.snake_body[i][1] * blockSize, blockSize, blockSize);
     }
@@ -137,20 +146,20 @@ function update() {
     player1.headY += player1.velocityY;
     player2.headX += player2.velocityX;
     player2.headY += player2.velocityY;
-    draw_snake_heads();
+    draw_snake_head();
     // Checks if player 1 collides with wall
     if (player1.headX < 0 || player1.headX > (cols - 1) || player1.headY < 0 || player1.headY > (cols - 1)) {
         winner = "player2";
         GameOver = true;
     }
     // Checks if player1 collides with themselves, or with the player 2
-    for (var i = 0; i < player1.snake_body.length; i++) {
+    for (let i = 0; i < player1.snake_body.length; i++) {
         if (player1.headX == player1.snake_body[i][0] && player1.headY == player1.snake_body[i][1]) {
             winner = "player2";
             GameOver = true;
         }
     }
-    for (var i = 0; i < player2.snake_body.length; i++) {
+    for (let i = 0; i < player2.snake_body.length; i++) {
         if (player1.headX == player2.snake_body[i][0] && player1.headY == player2.snake_body[i][1]) {
             winner = "player2";
             GameOver = true;
@@ -162,13 +171,13 @@ function update() {
         GameOver = true;
     }
     // Checks if player1 collides with themselves, or with the player 2
-    for (var i = 0; i < player2.snake_body.length; i++) {
+    for (let i = 0; i < player2.snake_body.length; i++) {
         if (player2.headX == player2.snake_body[i][0] && player2.headY == player2.snake_body[i][1]) {
             winner = "player1";
             GameOver = true;
         }
     }
-    for (var i = 0; i < player1.snake_body.length; i++) {
+    for (let i = 0; i < player1.snake_body.length; i++) {
         if (player2.headX == player1.snake_body[i][0] && player2.headY == player1.snake_body[i][1]) {
             winner = "player1";
             GameOver = true;
@@ -178,7 +187,7 @@ function update() {
     player2.has_turned = false;
 }
 //Loads the correct imiage of the snake head depending on the direction
-function draw_snake_heads() {
+function draw_snake_head() {
     switch (player1.snake_direction) {
         case "up":
             context.drawImage(HeadUp, player1.headX * blockSize, player1.headY * blockSize, blockSize, blockSize);
@@ -195,16 +204,16 @@ function draw_snake_heads() {
     }
     switch (player2.snake_direction) {
         case "up":
-            context.drawImage(HeadUp, player2.headX * blockSize, player2.headY * blockSize, blockSize, blockSize);
+            context.drawImage(HeadUpRed, player2.headX * blockSize, player2.headY * blockSize, blockSize, blockSize);
             break;
         case "down":
-            context.drawImage(HeadDown, player2.headX * blockSize, player2.headY * blockSize, blockSize, blockSize);
+            context.drawImage(HeadDownRed, player2.headX * blockSize, player2.headY * blockSize, blockSize, blockSize);
             break;
         case "left":
-            context.drawImage(HeadLeft, player2.headX * blockSize, player2.headY * blockSize, blockSize, blockSize);
+            context.drawImage(HeadLeftRed, player2.headX * blockSize, player2.headY * blockSize, blockSize, blockSize);
             break;
         case "right":
-            context.drawImage(HeadRight, player2.headX * blockSize, player2.headY * blockSize, blockSize, blockSize);
+            context.drawImage(HeadRightRed, player2.headX * blockSize, player2.headY * blockSize, blockSize, blockSize);
             break;
     }
 }
@@ -268,7 +277,7 @@ function spawnFood() {
     foodX = Math.floor(Math.random() * cols);
     foodY = Math.floor(Math.random() * rows);
     // Tries again if food spawns under snake
-    for (var i = 0; i < player1.snake_body.length; i++) {
+    for (let i = 0; i < player1.snake_body.length; i++) {
         if ((foodX == player1.snake_body[i][0] && foodY == player1.snake_body[i][1]) ||
             (foodX == player1.headX && foodY == player1.headY)) {
             spawnFood();
@@ -276,8 +285,13 @@ function spawnFood() {
     }
 }
 //Changes the gradient of the snake body
-function gradient(distanceFromHead) {
-    var green = 150 - distanceFromHead * 3;
-    var red = Math.min(100, distanceFromHead * 3);
-    return "rgb(".concat(red, ", ").concat(green, ", 0)");
+function green_gradient(distanceFromHead) {
+    let green = 150 - distanceFromHead * 3;
+    let red = Math.min(100, distanceFromHead * 3);
+    return `rgb(${red}, ${green}, 0)`;
+}
+function red_gradient(distanceFromHead) {
+    let red = 150 - distanceFromHead * 3;
+    let green = Math.min(100, distanceFromHead * 3);
+    return `rgb(${red}, ${green}, 0)`;
 }
