@@ -117,81 +117,23 @@ window.onload = function () {
 //Will run every "frame"
 function update(): void {
     if (GameOver) {
-        
-        //Creates game over text and vishuals
-        const gameOver: HTMLDivElement = document.createElement("div");
-        gameOver.textContent = "GAME OVER";
-        gameOver.style.position = "relative";
-        gameOver.style.top = "-380px";
-        gameOver.style.left = "0";
-        gameOver.style.color = "white";
-        gameOver.style.fontFamily = "Press Start 2P, monospace";
-        gameOver.style.fontSize = "100px";
 
-        // Append the game over text element to the board container
-        document.body.appendChild(gameOver);
-        
-        clearInterval(interval)
+        print_game_over();
 
-        //Stops the game loop
         return;
     }
     
+    paint_board(context);
 
-    // Color in the board
-    context.fillStyle = "rgb(0, 51, 102)";
-    context.fillRect(0, 0, board.width, board.height)
+    paint_food(context);
 
-    // Color in the food
-    context.fillStyle = "red";
-    context.beginPath();
-    context.arc(foodX * blockSize + blockSize / 2,
-                foodY * blockSize + blockSize / 2, 
-                blockSize / 2,
-                0,
-                Math.PI * 2);
-    context.fill();
+    food_eaten(player, foodX, foodY);
 
-    // Eat the food
-    if (player.headX == foodX && player.headY == foodY) {
-        
-        player.snake_body.push([foodX, foodY]);
-        scoreUpdate();
-        spawnFood();
-    }
+    move_snake(player);
 
-    // Make body follow head
-    for (let i = player.snake_body.length - 1; i > 0; i--) {
-        player.snake_body[i] = player.snake_body[i - 1];
-    }
-    if (player.snake_body.length) {
-        player.snake_body[0] = [player.headX, player.headY];
-    }
+    color_in_snake(context, player);
 
-    // Color in the snake body
-    for (let i = 0; i < player.snake_body.length; i++) {
-        let color: string = gradient(i);
-        context.fillStyle = color;
-        context.fillRect(player.snake_body[i][0] * blockSize, 
-                         player.snake_body[i][1] * blockSize, 
-                         blockSize, 
-                         blockSize);
-    }
-
-    // Move the head
-    player.headX += player.velocityX;
-    player.headY += player.velocityY;
-    drawSnakeHead();
-
-    //Set game to game over if relevant
-    if (player.headX < 0 || player.headX > (cols - 1) || player.headY < 0 || player.headY > (cols - 1)) {
-        GameOver = true;
-    }
-    for (let i = 0; i < player.snake_body.length; i++) {
-        if (player.headX == player.snake_body[i][0] && player.headY == player.snake_body[i][1]) {
-            GameOver = true;
-        }
-    }
+    GameOver = is_game_over(player);
     
     player.has_turned = false;
 }
@@ -279,4 +221,95 @@ function gradient(distanceFromHead: number): string {
     let green: number = 150 - distanceFromHead * 3;
     let red: number = Math.min(100, distanceFromHead * 3);
     return `rgb(${red}, ${green}, 0)`;
+}
+
+function color_in_snake(context: CanvasRenderingContext2D, player: snake): void {
+    for (let i = 0; i < player.snake_body.length; i++) {
+        let color: string = gradient(i);
+        context.fillStyle = color;
+        context.fillRect(player.snake_body[i][0] * blockSize, 
+                            player.snake_body[i][1] * blockSize,
+                            blockSize, 
+                            blockSize);
+    }
+}
+
+function print_game_over(): void {
+    //Creates game over text and vishuals
+    const gameOver: HTMLDivElement = document.createElement("div");
+    gameOver.textContent = "GAME OVER";
+    gameOver.style.position = "relative";
+    gameOver.style.top = "-380px";
+    gameOver.style.left = "0";
+    gameOver.style.color = "white";
+    gameOver.style.fontFamily = "Press Start 2P, monospace";
+    gameOver.style.fontSize = "100px";
+
+    // Append the game over text element to the board container
+    document.body.appendChild(gameOver);
+    
+    clearInterval(interval)
+}
+
+function paint_board(context: CanvasRenderingContext2D): void {
+
+    // Color in the board
+    context.fillStyle = "rgb(0, 51, 102)";
+    context.fillRect(0, 0, board.width, board.height);
+}
+
+function paint_food(context: CanvasRenderingContext2D): void {
+    
+    // Color in the food
+    context.fillStyle = "red";
+    context.beginPath();
+    context.arc(foodX * blockSize + blockSize / 2,
+                foodY * blockSize + blockSize / 2, 
+                blockSize / 2,
+                0,
+                Math.PI * 2);
+    context.fill();
+}
+
+function food_eaten(player: snake, foodX: number, foodY: number): void {
+
+    // Eat the food
+    if (player.headX == foodX && player.headY == foodY) {
+        
+        player.snake_body.push([foodX, foodY]);
+        scoreUpdate();
+        spawnFood();
+    }
+}
+
+function move_snake(player: snake): void {
+
+    // Make body follow head
+    for (let i = player.snake_body.length - 1; i > 0; i--) {
+        player.snake_body[i] = player.snake_body[i - 1];
+    }
+    if (player.snake_body.length) {
+        player.snake_body[0] = [player.headX, player.headY];
+    }
+        // Move the head
+        player.headX += player.velocityX;
+        player.headY += player.velocityY;
+        drawSnakeHead();
+}
+
+function is_game_over(player: snake,): boolean {
+
+    //Set game to game over if relevant
+    for (let i = 0; i < player.snake_body.length; i++) {
+        if (player.headX == player.snake_body[i][0] && player.headY == player.snake_body[i][1]) {
+            
+            return true;
+        }
+    } 
+
+    if (player.headX < 0 || player.headX > (cols - 1) || player.headY < 0 || player.headY > (cols - 1)) {
+        return true;
+    } else {
+        return false;
+    }
 }

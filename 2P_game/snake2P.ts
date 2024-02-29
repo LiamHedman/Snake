@@ -47,11 +47,21 @@ const HeadDown: HTMLImageElement = new Image();
 const HeadLeft: HTMLImageElement = new Image();
 const HeadRight: HTMLImageElement = new Image();
 
+const HeadUpRed: HTMLImageElement = new Image();
+const HeadDownRed: HTMLImageElement = new Image();
+const HeadLeftRed: HTMLImageElement = new Image();
+const HeadRightRed: HTMLImageElement = new Image();
+
     //The source for the images
 HeadUp.src = "../Bilder/HeadUp.png"
 HeadRight.src = "../Bilder/HeadRight.png"
 HeadDown.src = "../Bilder/HeadDown.png"
 HeadLeft.src = "../Bilder/HeadLeft.png"
+
+HeadUpRed.src = "../Bilder/HeadUp(red).png"
+HeadRightRed.src = "../Bilder/HeadRight(red).png"
+HeadDownRed.src = "../Bilder/HeadDown(red).png"
+HeadLeftRed.src = "../Bilder/HeadLeft(red).png"
 
 // Food position on board
 let foodX: number;
@@ -168,7 +178,7 @@ function update(): void {
 
     // Color in the snake body
     for (let i = 0; i < player1.snake_body.length; i++) {
-        let color: string = gradient(i);
+        let color: string = green_gradient(i);
         context.fillStyle = color;
         context.fillRect(player1.snake_body[i][0] * blockSize, 
                          player1.snake_body[i][1] * blockSize, 
@@ -176,7 +186,7 @@ function update(): void {
                          blockSize);
     }
     for (let i = 0; i < player2.snake_body.length; i++) {
-        let color: string = gradient(i);
+        let color: string = red_gradient(i);
         context.fillStyle = color;
         context.fillRect(player2.snake_body[i][0] * blockSize, 
                          player2.snake_body[i][1] * blockSize, 
@@ -189,7 +199,7 @@ function update(): void {
     player1.headY += player1.velocityY;
     player2.headX += player2.velocityX;
     player2.headY += player2.velocityY;
-    draw_snake_heads();
+    draw_snake_head();
 
     // Checks if player 1 collides with wall
     if (player1.headX < 0 || player1.headX > (cols - 1) || player1.headY < 0 || player1.headY > (cols - 1)) {
@@ -236,7 +246,7 @@ function update(): void {
 }
 
 //Loads the correct imiage of the snake head depending on the direction
-function draw_snake_heads(): void {
+function draw_snake_head(): void {
     switch (player1.snake_direction) {
         case "up":
             context.drawImage(HeadUp, player1.headX * blockSize, 
@@ -268,26 +278,26 @@ function draw_snake_heads(): void {
 
     switch (player2.snake_direction) {
         case "up":
-            context.drawImage(HeadUp, player2.headX * blockSize, 
+            context.drawImage(HeadUpRed, player2.headX * blockSize, 
                               player2.headY * blockSize, 
                               blockSize, 
                               blockSize);
             break;
         case "down":
-            context.drawImage(HeadDown, player2.headX * blockSize, 
+            context.drawImage(HeadDownRed, player2.headX * blockSize, 
                               player2.headY * blockSize, 
                               blockSize, 
                               blockSize);
             break;
         case "left":
-            context.drawImage(HeadLeft, 
+            context.drawImage(HeadLeftRed, 
                               player2.headX * blockSize,
                               player2.headY * blockSize,
                               blockSize,
                               blockSize);
             break;
         case "right":
-            context.drawImage(HeadRight,
+            context.drawImage(HeadRightRed,
                               player2.headX * blockSize,
                               player2.headY * blockSize,
                               blockSize,
@@ -367,8 +377,13 @@ function spawnFood(): void {
 }
 
 //Changes the gradient of the snake body
-function gradient(distanceFromHead: number): string {
+function green_gradient(distanceFromHead: number): string {
     let green: number = 150 - distanceFromHead * 3;
     let red: number = Math.min(100, distanceFromHead * 3);
+    return `rgb(${red}, ${green}, 0)`;
+}
+function red_gradient(distanceFromHead: number): string {
+    let red: number = 150 - distanceFromHead * 3;
+    let green: number = Math.min(100, distanceFromHead * 3);
     return `rgb(${red}, ${green}, 0)`;
 }
