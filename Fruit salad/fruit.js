@@ -1,17 +1,16 @@
-"use strict";
-let interval;
-let frameCount = 0;
+var interval;
+var frameCount = 0;
 // Board variables
-const blockSize = 25;
+var blockSize = 25;
 //Board dimensions
-const rows = 20;
-const cols = 20;
+var rows = 20;
+var cols = 20;
 //The board (drawable region in HTML)
-let board;
+var board;
 //Provides the 2D rendering context for the drawing surface the canvas element. 
 //Contains methods and properties that allow drawing shapes, text, images, etc. 
-let context;
-let player = { snake_direction: "up",
+var context;
+var player = { snake_direction: "up",
     velocityX: 0,
     velocityY: 0,
     has_turned: false,
@@ -19,28 +18,28 @@ let player = { snake_direction: "up",
     headX: 9,
     headY: 9 };
 //Pictures of the snake's head
-const HeadUp = new Image();
-const HeadDown = new Image();
-const HeadLeft = new Image();
-const HeadRight = new Image();
+var HeadUp = new Image();
+var HeadDown = new Image();
+var HeadLeft = new Image();
+var HeadRight = new Image();
 //The source for the images
 HeadUp.src = "../Bilder/HeadUp.png";
 HeadRight.src = "../Bilder/HeadRight.png";
 HeadDown.src = "../Bilder/HeadDown.png";
 HeadLeft.src = "../Bilder/HeadLeft.png";
 // Food position on board
-let red_food_x;
-let red_food_y;
+var red_food_x;
+var red_food_y;
 //Fast food
-let fast_food_x;
-let fast_food_y;
+var fast_food_x;
+var fast_food_y;
 // Game logic
 //HTML div element created dynamically. Will be used to display the score of the game
-const scoreCounter = document.createElement("div");
+var scoreCounter = document.createElement("div");
 //Initiated score 0
-let score = 0;
+var score = 0;
 //Game will stop when true
-let GameOver = false;
+var GameOver = false;
 //This will run once when the entire HTML document has finished loading.
 window.onload = function () {
     //Retrieves the HTML element with the ID "board"
@@ -68,7 +67,7 @@ window.onload = function () {
     // Append the score counter element to the board container
     document.body.appendChild(scoreCounter);
     //Create reastartbutton and vishuals
-    const restartButton = document.createElement("button");
+    var restartButton = document.createElement("button");
     restartButton.textContent = "RESTART";
     restartButton.style.position = "relative";
     restartButton.style.top = "-520px";
@@ -94,7 +93,7 @@ function update() {
     if (GameOver) {
         clearInterval(interval); // Stop the game loop
         //Creates game over text and vishuals
-        const gameOver = document.createElement("div");
+        var gameOver = document.createElement("div");
         gameOver.textContent = "GAME OVER";
         gameOver.style.position = "relative";
         gameOver.style.top = "-380px";
@@ -134,15 +133,15 @@ function update() {
         frameCount = 0;
     }
     // Make body follow head
-    for (let i = player.snake_body.length - 1; i > 0; i--) {
+    for (var i = player.snake_body.length - 1; i > 0; i--) {
         player.snake_body[i] = player.snake_body[i - 1];
     }
     if (player.snake_body.length) {
         player.snake_body[0] = [player.headX, player.headY];
     }
     // Color in the snake body
-    for (let i = 0; i < player.snake_body.length; i++) {
-        let color = gradient(i);
+    for (var i = 0; i < player.snake_body.length; i++) {
+        var color = gradient(i);
         context.fillStyle = color;
         context.fillRect(player.snake_body[i][0] * blockSize, player.snake_body[i][1] * blockSize, blockSize, blockSize);
     }
@@ -154,7 +153,7 @@ function update() {
     if (player.headX < 0 || player.headX > (cols - 1) || player.headY < 0 || player.headY > (cols - 1)) {
         GameOver = true;
     }
-    for (let i = 0; i < player.snake_body.length; i++) {
+    for (var i = 0; i < player.snake_body.length; i++) {
         if (player.headX == player.snake_body[i][0] && player.headY == player.snake_body[i][1]) {
             GameOver = true;
         }
@@ -215,7 +214,7 @@ function spawnFood(food) {
     if (food == "red") {
         red_food_x = Math.floor(Math.random() * cols);
         red_food_y = Math.floor(Math.random() * rows);
-        for (let i = 0; i < player.snake_body.length; i++) {
+        for (var i = 0; i < player.snake_body.length; i++) {
             if ((red_food_x == player.snake_body[i][0] && red_food_y == player.snake_body[i][1]) ||
                 (red_food_x == player.headX && red_food_y == player.headY)) {
                 spawnFood("red");
@@ -225,7 +224,7 @@ function spawnFood(food) {
     else if (food == "fast") {
         fast_food_x = Math.floor(Math.random() * cols);
         fast_food_y = Math.floor(Math.random() * rows);
-        for (let i = 0; i < player.snake_body.length; i++) {
+        for (var i = 0; i < player.snake_body.length; i++) {
             if ((fast_food_x == player.snake_body[i][0] && fast_food_y == player.snake_body[i][1]) ||
                 (fast_food_x == player.headX && fast_food_y == player.headY)) {
                 spawnFood("fast");
@@ -235,7 +234,7 @@ function spawnFood(food) {
 }
 //Changes the gradient of the snake body
 function gradient(distanceFromHead) {
-    let green = 150 - distanceFromHead * 3;
-    let red = Math.min(100, distanceFromHead * 3);
-    return `rgb(${red}, ${green}, 0)`;
+    var green = 150 - distanceFromHead * 3;
+    var red = Math.min(100, distanceFromHead * 3);
+    return "rgb(".concat(red, ", ").concat(green, ", 0)");
 }

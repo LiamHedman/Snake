@@ -31,6 +31,8 @@ var foodY;
 // Game logic
 //HTML div element created dynamically. Will be used to display the score of the game
 var scoreCounter = document.createElement("div");
+//Create reastartbutton and visuals
+var restartButton = document.createElement("button");
 //Initiated score 0
 var score = 0;
 //Game will stop when true
@@ -54,15 +56,11 @@ window.onload = function () {
     //Frame rate and speed of snake
     interval = setInterval(update, 1000 / 10);
     display_score(scoreCounter, score);
-    //Create reastartbutton and visuals
-    var restartButton = document.createElement("button");
     paint_restart_button(restartButton);
     //Event listener detecting click on restartbutton
     restartButton.addEventListener("click", function () {
         location.reload(); // Reload the page to restart the game
     });
-    // Append the restart button element to the board container
-    document.body.appendChild(restartButton);
 };
 //Will run every "frame"
 function update() {
@@ -249,4 +247,6 @@ function paint_restart_button(restartButton) {
     restartButton.style.cursor = "pointer";
     restartButton.style.color = "white";
     restartButton.style.backgroundColor = "transparent";
+    // Append the restart button element to the board container
+    document.body.appendChild(restartButton);
 }

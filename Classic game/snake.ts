@@ -51,6 +51,9 @@ let foodY: number;
 //HTML div element created dynamically. Will be used to display the score of the game
 const scoreCounter: HTMLDivElement = document.createElement("div");
 
+//Create reastartbutton and visuals
+const restartButton: HTMLButtonElement = document.createElement("button");
+
 //Initiated score 0
 let score: number = 0;
 
@@ -83,18 +86,12 @@ window.onload = function () {
 
     display_score(scoreCounter, score);
 
-    //Create reastartbutton and visuals
-    const restartButton: HTMLButtonElement = document.createElement("button");
-
     paint_restart_button(restartButton);
 
     //Event listener detecting click on restartbutton
     restartButton.addEventListener("click", function () {
         location.reload(); // Reload the page to restart the game
     });
-
-    // Append the restart button element to the board container
-    document.body.appendChild(restartButton);
 }
 
 //Will run every "frame"
@@ -350,4 +347,7 @@ function paint_restart_button(restartButton: HTMLButtonElement): void {
     restartButton.style.cursor = "pointer";
     restartButton.style.color = "white";
     restartButton.style.backgroundColor = "transparent";
+    
+    // Append the restart button element to the board container
+    document.body.appendChild(restartButton);
 }
