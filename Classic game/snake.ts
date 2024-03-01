@@ -1,7 +1,6 @@
 type intervalID = ReturnType<typeof setInterval>
 
 let interval: intervalID;
->>>>>>> f6e927afeace22b6c1f063479579d2c605380890
 
 const blockSize: number = 25;
 
@@ -294,7 +293,6 @@ function gradient(distanceFromHead: number): string {
     let green: number = 150 - distanceFromHead * 3;
     let red: number = Math.min(100, distanceFromHead * 3);
     return `rgb(${red}, ${green}, 0)`;
-<<<<<<< HEAD
 }
 
 window.addEventListener("keydown", (event) => {
@@ -319,6 +317,4 @@ function PauseGame() {
     
 function ResumeGame() {
     interval = setInterval(update, 1000 / 10);
-=======
->>>>>>> f6e927afeace22b6c1f063479579d2c605380890
 }
