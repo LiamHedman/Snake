@@ -2,7 +2,6 @@ type intervalID = ReturnType<typeof setInterval>
 
 let interval: intervalID;
 
-
 const blockSize: number = 25;
 
 //Board dimensions
@@ -294,7 +293,6 @@ function gradient(distanceFromHead: number): string {
     let green: number = 150 - distanceFromHead * 3;
     let red: number = Math.min(100, distanceFromHead * 3);
     return `rgb(${red}, ${green}, 0)`;
-
 }
 
 window.addEventListener("keydown", (event) => {
