@@ -33,6 +33,8 @@ var foodY;
 var scoreCounter = document.createElement("div");
 //Create reastartbutton and visuals
 var restartButton = document.createElement("button");
+//Create menu button
+var menuButton = document.createElement("button");
 //Initiated score 0
 var score = 0;
 //Game will stop when true
@@ -54,7 +56,7 @@ window.onload = function () {
     document.addEventListener("keydown", function (e) {
         changeDirection(e, player); // Passing both the event and the player object
     });
-    //Frame rate and speed of snake
+    //Frame rate and speed of snake if not paused
     interval = setInterval(update, 1000 / 10);
     display_score(scoreCounter, score);
     paint_restart_button(restartButton);
@@ -62,27 +64,20 @@ window.onload = function () {
     restartButton.addEventListener("click", function () {
         location.reload(); // Reload the page to restart the game
     });
+    paint_menu_button(menuButton);
+    menuButton.addEventListener("click", function () {
+        window.location.href = "../index.html";
+    });
 };
 //Will run every "frame"
 function update() {
+    var _a;
     //Game does not update when paused
     if (pause) {
         return;
     }
     if (dead) {
-        //Creates game over text and vishuals
-        var gameOver = document.createElement("div");
-        gameOver.textContent = "GAME OVER";
-        gameOver.style.position = "relative";
-        gameOver.style.top = "-380px";
-        gameOver.style.left = "0";
-        gameOver.style.color = "white";
-        gameOver.style.fontFamily = "Press Start 2P, monospace";
-        gameOver.style.fontSize = "100px";
-        // Append the game over text element to the board container
-        document.body.appendChild(gameOver);
-        clearInterval(interval);
-        //Stops the game loop
+        print_game_over(document, interval);
         return;
     }
     paint_board(board, context);
@@ -170,6 +165,7 @@ function gradient(distanceFromHead) {
     var red = Math.min(100, distanceFromHead * 3);
     return "rgb(".concat(red, ", ").concat(green, ", 0)");
 }
+//Checks and executes pause
 window.addEventListener("keydown", function (event) {
     if (event.code === "Space") {
         if (pause) {
@@ -181,12 +177,14 @@ window.addEventListener("keydown", function (event) {
         pause = !pause; // Toggle pause
     }
 });
+//Mechanics for Pause
 function PauseGame() {
     clearInterval(interval);
     var PauseMenu = document.createElement("div");
     PauseMenu.innerText = "Press SPACE to resume";
     document.body.appendChild(PauseMenu);
 }
+//Mechanics for Resume
 function ResumeGame() {
     interval = setInterval(update, 1000 / 10);
 }
@@ -285,4 +283,19 @@ function paint_restart_button(restartButton) {
     restartButton.style.backgroundColor = "transparent";
     // Append the restart button element to the board container
     document.body.appendChild(restartButton);
+}
+function paint_menu_button(menuButton) {
+    //Visuals for menu button
+    menuButton.textContent = "MENU";
+    menuButton.style.position = "fixed"; // Change position to "fixed"
+    menuButton.style.top = "20px"; // Position from the top
+    menuButton.style.left = "20px"; // Position from the left
+    menuButton.style.padding = "5px 10px";
+    menuButton.style.fontSize = "20px";
+    menuButton.style.cursor = "pointer";
+    menuButton.style.color = "white";
+    menuButton.style.backgroundColor = "#003366";
+    menuButton.style.borderRadius = "5px";
+    // Append the menu button element to the body
+    document.body.appendChild(menuButton);
 }

@@ -57,13 +57,16 @@ const scoreCounter: HTMLDivElement = document.createElement("div");
 //Create reastartbutton and visuals
 const restartButton: HTMLButtonElement = document.createElement("button");
 
+//Create menu button
+const menuButton: HTMLButtonElement = document.createElement("button");
+
 //Initiated score 0
 let score: number = 0;
 
-    //Game will stop when true
-let dead: boolean = false;
+//Game will stop when true
+    let dead: boolean = false;
 
-let pause: boolean = false;
+    let pause: boolean = false;
 
 //This will run once when the entire HTML document has finished loading.
 window.onload = function () {
@@ -96,6 +99,12 @@ window.onload = function () {
     //Event listener detecting click on restartbutton
     restartButton.addEventListener("click", function () {
         location.reload(); // Reload the page to restart the game
+    });
+
+    paint_menu_button(menuButton);
+
+    menuButton.addEventListener("click", function () {
+        window.location.href = "../index.html";
     });
 }
 
@@ -237,10 +246,13 @@ function gradient(distanceFromHead: number): string {
     let red: number = Math.min(100, distanceFromHead * 3);
     return `rgb(${red}, ${green}, 0)`;
 }
+
+//Checks and executes pause
 window.addEventListener("keydown", (event) => {
     if (event.code === "Space") {
         if (pause) {
             ResumeGame(); // Resume game if paused 
+            
         } 
         else {
             PauseGame(); // Pause game if not paused
@@ -249,6 +261,7 @@ window.addEventListener("keydown", (event) => {
     }
 });
 
+//Mechanics for Pause
 function PauseGame() {
     clearInterval(interval);
     
@@ -256,7 +269,8 @@ function PauseGame() {
                 PauseMenu.innerText = "Press SPACE to resume";
                 document.body.appendChild(PauseMenu);
             }
-    
+
+//Mechanics for Resume
 function ResumeGame() {
     interval = setInterval(update, 1000 / 10);
 }
@@ -382,4 +396,23 @@ function paint_restart_button(restartButton: HTMLButtonElement): void {
     
     // Append the restart button element to the board container
     document.body.appendChild(restartButton);
+}
+
+
+function paint_menu_button(menuButton: HTMLButtonElement): void {
+
+    //Visuals for menu button
+    menuButton.textContent = "MENU";
+    menuButton.style.position = "fixed"; // Change position to "fixed"
+    menuButton.style.top = "20px"; // Position from the top
+    menuButton.style.left = "20px"; // Position from the left
+    menuButton.style.padding = "5px 10px";
+    menuButton.style.fontSize = "20px";
+    menuButton.style.cursor = "pointer";
+    menuButton.style.color = "white";
+    menuButton.style.backgroundColor = "#003366";
+    menuButton.style.borderRadius = "5px"; 
+
+    // Append the menu button element to the body
+    document.body.appendChild(menuButton);
 }
