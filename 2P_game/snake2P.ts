@@ -71,6 +71,8 @@ let foodY: number;
     //Game will stop when true
 let GameOver: boolean = false;
 
+let tie: boolean = false;
+
 //This will run once when the entire HTML document has finished loading.
 window.onload = function () {
 
@@ -105,18 +107,18 @@ window.onload = function () {
     restartButton.style.color = "white";
     restartButton.style.backgroundColor = "transparent";
 
+    // Append the restart button element to the board container
+    document.body.appendChild(restartButton);
+
     //Event listener detecting click on restartbutton
     restartButton.addEventListener("click", function () {
         location.reload(); // Reload the page to restart the game
     });
-
-    // Append the restart button element to the board container
-    document.body.appendChild(restartButton);
 }
 
 //Will run every "frame"
 function update(): void {
-    if (GameOver) {
+    if (GameOver || tie) {
         
         //Creates game over text and vishuals
         const gameOver: HTMLDivElement = document.createElement("div");
@@ -239,7 +241,8 @@ function update(): void {
         }
     }
     
-    
+    //Checks for tie 
+    tie = tie_check(player1, player2);
     
     player1.has_turned = false;
     player2.has_turned = false;
@@ -387,3 +390,26 @@ function red_gradient(distanceFromHead: number): string {
     let green: number = Math.min(100, distanceFromHead * 3);
     return `rgb(${red}, ${green}, 0)`;
 }
+function tie_check(player1: snake, player2: snake): boolean {
+    if ((player1.snake_direction == "left" && player2.snake_direction == "right") &&
+        (player1.headY == player2.headY) &&
+        (player1.headX == (player2.headX || player2.headX - 1))) {
+            console.log("krock!");
+            return true;
+    } else if ((player1.snake_direction == "right" && player2.snake_direction == "left") &&
+                (player1.headY == player2.headY) &&
+                (player1.headX == (player2.headX || player2.headX + 1))) {
+                    console.log("krock!");
+                    return true;
+    } else if ((player1.snake_direction == "up" && player2.snake_direction == "down") &&
+                (player1.headX == player2.headX) &&
+                (player1.headY == (player2.headY || player2.headY + 1))) {
+                    return true;
+    } else if ((player1.snake_direction == "down" && player2.snake_direction == "up") &&
+                (player1.headX == player2.headX) &&
+                (player1.headY == (player2.headY || player2.headY - 1))) {
+                    return true;       
+    } else {
+        return false;
+    }
+}   
