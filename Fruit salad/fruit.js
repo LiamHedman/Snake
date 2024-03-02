@@ -1,8 +1,6 @@
 var interval;
-var frameCount = 0;
-// Board variables
-var blockSize = 25;
 //Board dimensions
+var blockSize = 25;
 var rows = 20;
 var cols = 20;
 //The board (drawable region in HTML)
@@ -28,20 +26,26 @@ HeadRight.src = "../Bilder/HeadRight.png";
 HeadDown.src = "../Bilder/HeadDown.png";
 HeadLeft.src = "../Bilder/HeadLeft.png";
 // Food position on board
-var red_food_x;
-var red_food_y;
-//Fast food
-var fast_food_x;
-var fast_food_y;
+var foodX;
+var foodY;
+var blue_foodX;
+var blue_foodY;
+var yellow_foodX;
+var yellow_foodY;
+var orange_foodX;
+var orange_foodY;
 // Game logic
 //HTML div element created dynamically. Will be used to display the score of the game
 var scoreCounter = document.createElement("div");
+//Create reastartbutton and visuals
+var restartButton = document.createElement("button");
 //Initiated score 0
 var score = 0;
 //Game will stop when true
 var GameOver = false;
 //This will run once when the entire HTML document has finished loading.
 window.onload = function () {
+    var _a, _b, _c, _d;
     //Retrieves the HTML element with the ID "board"
     board = document.getElementById("board");
     //Height and width of the board
@@ -50,124 +54,65 @@ window.onload = function () {
     //retrieves the 2D drawing context of the canvas and provides 2D drawing functions for the canvas.
     context = board.getContext("2d");
     //Spawns the food
-    spawnFood("red");
-    spawnFood("fast");
+    _a = spawnFood(player), foodX = _a[0], foodY = _a[1];
+    _b = spawnFood(player), blue_foodX = _b[0], blue_foodY = _b[1];
+    _c = spawnFood(player), yellow_foodX = _c[0], yellow_foodY = _c[1];
+    _d = spawnFood(player), orange_foodX = _d[0], orange_foodY = _d[1];
     //When a key is pressed down, changeDirection() will be called.
-    document.addEventListener("keydown", changeDirection);
+    document.addEventListener("keydown", function (e) {
+        changeDirection(e, player); // Passing both the event and the player object
+    });
     //Frame rate and speed of snake
     interval = setInterval(update, 1000 / 10);
-    //Visuals for score counter
-    scoreCounter.style.position = "relative";
-    scoreCounter.style.top = "0";
-    scoreCounter.style.left = "0";
-    scoreCounter.style.color = "black";
-    scoreCounter.style.fontFamily = "Press Start 2P, monospace";
-    scoreCounter.style.fontSize = "20px";
-    scoreCounter.textContent = "SCORE: " + score;
-    // Append the score counter element to the board container
-    document.body.appendChild(scoreCounter);
-    //Create reastartbutton and vishuals
-    var restartButton = document.createElement("button");
-    restartButton.textContent = "RESTART";
-    restartButton.style.position = "relative";
-    restartButton.style.top = "-520px";
-    restartButton.style.right = "-180px";
-    restartButton.style.padding = "5px 10px";
-    restartButton.style.fontSize = "16px";
-    restartButton.style.cursor = "pointer";
-    restartButton.style.color = "white";
-    restartButton.style.backgroundColor = "transparent";
+    display_score(scoreCounter, score);
+    paint_restart_button(restartButton);
     //Event listener detecting click on restartbutton
     restartButton.addEventListener("click", function () {
         location.reload(); // Reload the page to restart the game
     });
-    // Append the restart button element to the board container
-    document.body.appendChild(restartButton);
 };
 //Will run every "frame"
 function update() {
-    if (frameCount === 10) {
-        clearInterval(interval);
-        interval = setInterval(update, 1000 / 10);
-    }
+    var _a, _b, _c, _d;
     if (GameOver) {
-        clearInterval(interval); // Stop the game loop
-        //Creates game over text and vishuals
-        var gameOver = document.createElement("div");
-        gameOver.textContent = "GAME OVER";
-        gameOver.style.position = "relative";
-        gameOver.style.top = "-380px";
-        gameOver.style.left = "0";
-        gameOver.style.color = "white";
-        gameOver.style.fontFamily = "Press Start 2P, monospace";
-        gameOver.style.fontSize = "100px";
-        // Append the game over text element to the board container
-        document.body.appendChild(gameOver);
+        print_game_over(document, interval);
         return;
     }
-    // Color in the board
-    context.fillStyle = "rgb(0, 51, 102)";
-    context.fillRect(0, 0, board.width, board.height);
-    // Color in red food
-    context.fillStyle = "red";
-    context.beginPath();
-    context.arc(red_food_x * blockSize + blockSize / 2, red_food_y * blockSize + blockSize / 2, blockSize / 2, 0, Math.PI * 2);
-    context.fill();
-    context.fillStyle = "blue";
-    context.beginPath();
-    context.arc(fast_food_x * blockSize + blockSize / 2, fast_food_y * blockSize + blockSize / 2, blockSize / 2, 0, Math.PI * 2);
-    context.fill();
-    // Eat red food
-    if (player.headX == red_food_x && player.headY == red_food_y) {
-        player.snake_body.push([red_food_x, red_food_y]);
-        scoreUpdate();
-        spawnFood("red");
+    paint_board(board, context);
+    paint_food(blockSize, foodX, foodY, "red", context);
+    paint_food(blockSize, blue_foodX, blue_foodY, "blue", context);
+    paint_food(blockSize, yellow_foodX, yellow_foodY, "yellow", context);
+    paint_food(blockSize, orange_foodX, orange_foodY, "orange", context);
+    if (food_eaten(player, foodX, foodY)) {
+        score = scoreUpdate(scoreCounter, score);
+        _a = spawnFood(player), foodX = _a[0], foodY = _a[1];
     }
-    // Eat fast food
-    if (player.headX == fast_food_x && player.headY == fast_food_y) {
-        player.snake_body.push([fast_food_x, fast_food_y]);
-        scoreUpdate();
-        spawnFood("fast");
-        // Increase the speed
-        interval = setInterval(update, 1000 / 12);
-        frameCount = 0;
+    if (food_eaten(player, blue_foodX, blue_foodY)) {
+        score = scoreUpdate(scoreCounter, score);
+        _b = spawnFood(player), blue_foodX = _b[0], blue_foodY = _b[1];
     }
-    // Make body follow head
-    for (var i = player.snake_body.length - 1; i > 0; i--) {
-        player.snake_body[i] = player.snake_body[i - 1];
+    if (food_eaten(player, yellow_foodX, yellow_foodY)) {
+        score = scoreUpdate(scoreCounter, score);
+        _c = spawnFood(player), yellow_foodY = _c[0], yellow_foodY = _c[1];
     }
-    if (player.snake_body.length) {
-        player.snake_body[0] = [player.headX, player.headY];
+    if (food_eaten(player, orange_foodX, orange_foodY)) {
+        score = scoreUpdate(scoreCounter, score);
+        _d = spawnFood(player), orange_foodX = _d[0], orange_foodY = _d[1];
     }
-    // Color in the snake body
-    for (var i = 0; i < player.snake_body.length; i++) {
-        var color = gradient(i);
-        context.fillStyle = color;
-        context.fillRect(player.snake_body[i][0] * blockSize, player.snake_body[i][1] * blockSize, blockSize, blockSize);
-    }
-    // Move the head
-    player.headX += player.velocityX;
-    player.headY += player.velocityY;
-    drawSnakeHead();
-    //Set game to game over if relevant
-    if (player.headX < 0 || player.headX > (cols - 1) || player.headY < 0 || player.headY > (cols - 1)) {
-        GameOver = true;
-    }
-    for (var i = 0; i < player.snake_body.length; i++) {
-        if (player.headX == player.snake_body[i][0] && player.headY == player.snake_body[i][1]) {
-            GameOver = true;
-        }
-    }
-    frameCount++;
+    move_snake(player);
+    color_in_snake(context, player, blockSize);
+    GameOver = is_game_over(player, rows, cols);
     player.has_turned = false;
 }
+//Functions:
 //Increases the score with a random number between 5 and 10
-function scoreUpdate() {
-    score += Math.floor(Math.random() * 5 + 5);
-    scoreCounter.textContent = "SCORE: " + score;
+function scoreUpdate(scoreCounter, score) {
+    var new_score = score + Math.floor(Math.random() * 5 + 5);
+    scoreCounter.textContent = "SCORE: " + new_score;
+    return new_score;
 }
 //Loads the correct imiage of the snake head depending on the direction
-function drawSnakeHead() {
+function drawSnakeHead(player, context, HeadUp, HeadDown, HeadLeft, HeadRight, blockSize) {
     switch (player.snake_direction) {
         case "up":
             context.drawImage(HeadUp, player.headX * blockSize, player.headY * blockSize, blockSize, blockSize);
@@ -184,7 +129,7 @@ function drawSnakeHead() {
     }
 }
 //Chnges the direction of the snake 
-function changeDirection(e) {
+function changeDirection(e, player) {
     if (!player.has_turned) {
         if (e.code == "ArrowUp" && player.velocityY != 1) {
             player.snake_direction = "up";
@@ -210,31 +155,122 @@ function changeDirection(e) {
     player.has_turned = true;
 }
 //Spawns food in random position
-function spawnFood(food) {
-    if (food == "red") {
-        red_food_x = Math.floor(Math.random() * cols);
-        red_food_y = Math.floor(Math.random() * rows);
-        for (var i = 0; i < player.snake_body.length; i++) {
-            if ((red_food_x == player.snake_body[i][0] && red_food_y == player.snake_body[i][1]) ||
-                (red_food_x == player.headX && red_food_y == player.headY)) {
-                spawnFood("red");
-            }
+function spawnFood(player) {
+    var foodX;
+    var foodY;
+    // Generate random coordinates for food
+    foodX = Math.floor(Math.random() * cols);
+    foodY = Math.floor(Math.random() * rows);
+    // Check if food spawns on the snake's body or head
+    for (var i = 0; i < player.snake_body.length; i++) {
+        if ((foodX === player.snake_body[i][0] && foodY === player.snake_body[i][1]) ||
+            (foodX === player.headX && foodY === player.headY)) {
+            // If food spawns on the snake, regenerate it
+            return spawnFood(player); // Recursively call the function to get new coordinates
         }
     }
-    else if (food == "fast") {
-        fast_food_x = Math.floor(Math.random() * cols);
-        fast_food_y = Math.floor(Math.random() * rows);
-        for (var i = 0; i < player.snake_body.length; i++) {
-            if ((fast_food_x == player.snake_body[i][0] && fast_food_y == player.snake_body[i][1]) ||
-                (fast_food_x == player.headX && fast_food_y == player.headY)) {
-                spawnFood("fast");
-            }
-        }
-    }
+    // Return the tuple with food coordinates
+    return [foodX, foodY];
 }
 //Changes the gradient of the snake body
 function gradient(distanceFromHead) {
     var green = 150 - distanceFromHead * 3;
     var red = Math.min(100, distanceFromHead * 3);
     return "rgb(".concat(red, ", ").concat(green, ", 0)");
+}
+function color_in_snake(context, player, blockSize) {
+    for (var i = 0; i < player.snake_body.length; i++) {
+        var color = gradient(i);
+        context.fillStyle = color;
+        context.fillRect(player.snake_body[i][0] * blockSize, player.snake_body[i][1] * blockSize, blockSize, blockSize);
+    }
+}
+function print_game_over(document, interval) {
+    //Creates game over text and vishuals
+    var gameOver = document.createElement("div");
+    gameOver.textContent = "GAME OVER";
+    gameOver.style.position = "relative";
+    gameOver.style.top = "-380px";
+    gameOver.style.left = "0";
+    gameOver.style.color = "white";
+    gameOver.style.fontFamily = "Press Start 2P, monospace";
+    gameOver.style.fontSize = "100px";
+    // Append the game over text element to the board container
+    document.body.appendChild(gameOver);
+    clearInterval(interval);
+}
+function paint_board(board, context) {
+    // Color in the board
+    context.fillStyle = "rgb(0, 51, 102)";
+    context.fillRect(0, 0, board.width, board.height);
+}
+function paint_food(blockSize, foodX, foodY, color, context) {
+    // Color in the food
+    context.fillStyle = color;
+    context.beginPath();
+    context.arc(foodX * blockSize + blockSize / 2, foodY * blockSize + blockSize / 2, blockSize / 2, 0, Math.PI * 2);
+    context.fill();
+}
+function food_eaten(player, foodX, foodY) {
+    // Eat the food
+    if (player.headX == foodX && player.headY == foodY) {
+        player.snake_body.push([foodX, foodY]);
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+function move_snake(player) {
+    // Make body follow head
+    for (var i = player.snake_body.length - 1; i > 0; i--) {
+        player.snake_body[i] = player.snake_body[i - 1];
+    }
+    if (player.snake_body.length) {
+        player.snake_body[0] = [player.headX, player.headY];
+    }
+    // Move the head
+    player.headX += player.velocityX;
+    player.headY += player.velocityY;
+    drawSnakeHead(player, context, HeadUp, HeadDown, HeadLeft, HeadRight, blockSize);
+}
+function is_game_over(player, rows, cols) {
+    //Set game to game over if relevant
+    for (var i = 0; i < player.snake_body.length; i++) {
+        if (player.headX == player.snake_body[i][0] && player.headY == player.snake_body[i][1]) {
+            return true;
+        }
+    }
+    if (player.headX < 0 || player.headX > (cols - 1) || player.headY < 0 || player.headY > (rows - 1)) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+function display_score(scoreCounter, score) {
+    //Visuals for score counter
+    scoreCounter.style.position = "relative";
+    scoreCounter.style.top = "0";
+    scoreCounter.style.left = "0";
+    scoreCounter.style.color = "black";
+    scoreCounter.style.fontFamily = "Press Start 2P, monospace";
+    scoreCounter.style.fontSize = "20px";
+    scoreCounter.textContent = "SCORE: " + score;
+    // Append the score counter element to the board container
+    document.body.appendChild(scoreCounter);
+}
+function paint_restart_button(restartButton) {
+    //Vishuals for restart button
+    restartButton.textContent = "RESTART";
+    restartButton.style.position = "relative";
+    restartButton.style.top = "-520px";
+    restartButton.style.right = "-180px";
+    restartButton.style.padding = "5px 10px";
+    restartButton.style.fontSize = "16px";
+    restartButton.style.cursor = "pointer";
+    restartButton.style.color = "white";
+    restartButton.style.backgroundColor = "transparent";
+    // Append the restart button element to the board container
+    document.body.appendChild(restartButton);
 }
