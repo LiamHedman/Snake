@@ -1,7 +1,22 @@
-type intervalID = ReturnType<typeof setInterval>
+import { snake,
+         cords,
+         changeDirection2P,
+         spawnFood,
+         ResumeGame,
+         color_in_snake,
+         paint_food,
+         gradient,
+         red_gradient,
+         paint_menu_button,
+         tie_check,
+         draw_snake_head2P,
+         print_game_over,
+         print_pause,
+         PauseGame,
+        
+        } from "../exports";
 
-let interval: intervalID;
-
+let interval: NodeJS.Timeout;
 let winner: "player1" | "player2" | "tie" | "none" = "none";
 
 // Board variables
@@ -19,16 +34,6 @@ let board: HTMLCanvasElement;
     //Contains methods and properties that allow drawing shapes, text, images, etc. 
 let context: CanvasRenderingContext2D;
 
-// Snake variables
-type cords = [number, number];
-type snake = {snake_direction: "up" | "down" | "left" | "right", 
-              velocityX: number,
-              velocityY: number,
-              has_turned: boolean,
-              snake_body: Array<cords>,
-              headX: number,
-              headY: number,
-              head_last_cords: [number, number]}
 
 let player1: snake = {snake_direction: "right", 
                      velocityX: 0, 
@@ -82,7 +87,6 @@ let tie: boolean = false;
 
 //This will run once when the entire HTML document has finished loading.
 window.onload = function () {
-
     //Retrieves the HTML element with the ID "board"
     board = document.getElementById("board") as HTMLCanvasElement;
 
@@ -97,13 +101,15 @@ window.onload = function () {
     context = board.getContext("2d") as CanvasRenderingContext2D; 
     
     //Spawns the food
-    spawnFood();
+    spawnFood(player1, rows, cols);
 
-    //When a key is pressed down, changeDirection() will be called.
-    document.addEventListener("keydown", changeDirection);
+    //When a key is pressed down, changeDirection2P() will be called.
+    document.addEventListener("keydown", (e: KeyboardEvent) => {
+        changeDirection2P(e, player1, player2); // Passing both the event and the player object
+    });
 
     //Frame rate and speed of snake
-    interval = setInterval(update, 800 / 10);
+    interval = setInterval(update2P, 800 / 10);
 
     //Create reastartbutton and vishuals
     const restartButton: HTMLButtonElement = document.createElement("button");
@@ -136,7 +142,7 @@ window.onload = function () {
 }
 
 //Will run every "frame"
-function update(): void {
+function update2P(): void {
     if (GameOver || tie) {
         
         //Creates game over text and vishuals
@@ -181,10 +187,10 @@ function update(): void {
     // Eat the food
     if (player1.headX == foodX && player1.headY == foodY) {
         player1.snake_body.push([foodX, foodY]);
-        spawnFood();
+        spawnFood(player1, cols, rows);
     } else if (player2.headX == foodX && player2.headY == foodY) {
         player2.snake_body.push([foodX, foodY]);
-        spawnFood();
+        spawnFood(player2, cols, rows);
     }
 
     // Make body follow head
@@ -204,7 +210,7 @@ function update(): void {
 
     // Color in the snake body
     for (let i = 0; i < player1.snake_body.length; i++) {
-        let color: string = green_gradient(i);
+        let color: string = gradient(i);
         context.fillStyle = color;
         context.fillRect(player1.snake_body[i][0] * blockSize, 
                          player1.snake_body[i][1] * blockSize, 
@@ -225,7 +231,18 @@ function update(): void {
     player1.headY += player1.velocityY;
     player2.headX += player2.velocityX;
     player2.headY += player2.velocityY;
-    draw_snake_head();
+    draw_snake_head2P(player1,
+                      player2,
+                      context,
+                      HeadUp,
+                      HeadDown,
+                      HeadLeft,
+                      HeadRight,
+                      HeadUpRed,
+                      HeadDownRed,
+                      HeadLeftRed,
+                      HeadRightRed,
+                      blockSize);
 
     // Checks for tie
     if (player1.head_last_cords == player2.head_last_cords ||
@@ -285,188 +302,3 @@ function update(): void {
     player1.has_turned = false;
     player2.has_turned = false;
 }
-
-function paint_menu_button(menuButton: HTMLButtonElement): void {
-
-    //Visuals for menu button
-    menuButton.textContent = "MENU";
-    menuButton.style.position = "fixed"; // Change position to "fixed"
-    menuButton.style.top = "20px"; // Position from the top
-    menuButton.style.left = "20px"; // Position from the left
-    menuButton.style.padding = "5px 10px";
-    menuButton.style.fontSize = "20px";
-    menuButton.style.cursor = "pointer";
-    menuButton.style.color = "white";
-    menuButton.style.backgroundColor = "#003366";
-    menuButton.style.borderRadius = "5px"; 
-
-    // Append the menu button element to the body
-    document.body.appendChild(menuButton);
-}
-
-//Loads the correct imiage of the snake head depending on the direction
-function draw_snake_head(): void {
-    switch (player1.snake_direction) {
-        case "up":
-            context.drawImage(HeadUp, player1.headX * blockSize, 
-                              player1.headY * blockSize, 
-                              blockSize, 
-                              blockSize);
-            break;
-        case "down":
-            context.drawImage(HeadDown, player1.headX * blockSize, 
-                              player1.headY * blockSize, 
-                              blockSize, 
-                              blockSize);
-            break;
-        case "left":
-            context.drawImage(HeadLeft, 
-                              player1.headX * blockSize,
-                              player1.headY * blockSize,
-                              blockSize,
-                              blockSize);
-            break;
-        case "right":
-            context.drawImage(HeadRight,
-                              player1.headX * blockSize,
-                              player1.headY * blockSize,
-                              blockSize,
-                              blockSize);
-            break;
-    }
-
-    switch (player2.snake_direction) {
-        case "up":
-            context.drawImage(HeadUpRed, player2.headX * blockSize, 
-                              player2.headY * blockSize, 
-                              blockSize, 
-                              blockSize);
-            break;
-        case "down":
-            context.drawImage(HeadDownRed, player2.headX * blockSize, 
-                              player2.headY * blockSize, 
-                              blockSize, 
-                              blockSize);
-            break;
-        case "left":
-            context.drawImage(HeadLeftRed, 
-                              player2.headX * blockSize,
-                              player2.headY * blockSize,
-                              blockSize,
-                              blockSize);
-            break;
-        case "right":
-            context.drawImage(HeadRightRed,
-                              player2.headX * blockSize,
-                              player2.headY * blockSize,
-                              blockSize,
-                              blockSize);
-            break;
-    }
-}
-
-//Chnges the direction of the snake 
-function changeDirection(e: KeyboardEvent): void {
-    if (!player1.has_turned) {
-        if (e.code == "KeyW" && player1.velocityY != 1) {
-            player1.snake_direction = "up";
-            player1.velocityX = 0;
-            player1.velocityY = -1;
-            player1.has_turned = true;
-        }
-        else if (e.code == "KeyS" && player1.velocityY != -1) {
-            player1.snake_direction = "down";
-            player1.velocityX = 0;
-            player1.velocityY = 1;
-            player1.has_turned = true;
-        }
-        else if (e.code == "KeyD" && player1.velocityX != -1) {
-            player1.snake_direction = "right";
-            player1.velocityX = 1;
-            player1.velocityY = 0;
-            player1.has_turned = true;
-        }
-        else if (e.code == "KeyA" && player1.velocityX != 1) {
-            player1.snake_direction = "left";
-            player1.velocityX = -1;
-            player1.velocityY = 0;
-            player1.has_turned = true;
-        }
-    }
-
-    if (!player2.has_turned) {
-        if (e.code == "ArrowUp" && player2.velocityY != 1) {
-            player2.snake_direction = "up";
-            player2.velocityX = 0;
-            player2.velocityY = -1;
-            player2.has_turned = true;
-        }
-        else if (e.code == "ArrowDown" && player2.velocityY != -1) {
-            player2.snake_direction = "down";
-            player2.velocityX = 0;
-            player2.velocityY = 1;
-            player2.has_turned = true;
-        }
-        else if (e.code == "ArrowRight" && player2.velocityX != -1) {
-            player2.snake_direction = "right";
-            player2.velocityX = 1;
-            player2.velocityY = 0;
-            player2.has_turned = true;
-        }
-        else if (e.code == "ArrowLeft" && player2.velocityX != 1) {
-            player2.snake_direction = "left";
-            player2.velocityX = -1;
-            player2.velocityY = 0;
-            player2.has_turned = true;
-        }
-    }
-}
-
-//Spawns food in random position
-function spawnFood(): void {
-    foodX = Math.floor(Math.random() * cols);
-    foodY = Math.floor(Math.random() * rows);
-
-    // Tries again if food spawns under snake
-    for (let i = 0; i < player1.snake_body.length ; i++) {
-        if ((foodX == player1.snake_body[i][0] && foodY == player1.snake_body[i][1]) || 
-            (foodX == player1.headX && foodY == player1.headY)) {
-            spawnFood();
-        }
-    }
-}
-
-//Changes the gradient of the snake body
-function green_gradient(distanceFromHead: number): string {
-    let green: number = 150 - distanceFromHead * 3;
-    let red: number = Math.min(100, distanceFromHead * 3);
-    return `rgb(${red}, ${green}, 0)`;
-}
-function red_gradient(distanceFromHead: number): string {
-    let red: number = 150 - distanceFromHead * 3;
-    let green: number = Math.min(100, distanceFromHead * 3);
-    return `rgb(${red}, ${green}, 0)`;
-}
-function tie_check(player1: snake, player2: snake): boolean {
-    if ((player1.snake_direction == "left" && player2.snake_direction == "right") &&
-        (player1.headY == player2.headY) &&
-        (player1.headX == (player2.headX || player2.headX - 1))) {
-            console.log("krock!");
-            return true;
-    } else if ((player1.snake_direction == "right" && player2.snake_direction == "left") &&
-                (player1.headY == player2.headY) &&
-                (player1.headX == (player2.headX || player2.headX + 1))) {
-                    console.log("krock!");
-                    return true;
-    } else if ((player1.snake_direction == "up" && player2.snake_direction == "down") &&
-                (player1.headX == player2.headX) &&
-                (player1.headY == (player2.headY || player2.headY + 1))) {
-                    return true;
-    } else if ((player1.snake_direction == "down" && player2.snake_direction == "up") &&
-                (player1.headX == player2.headX) &&
-                (player1.headY == (player2.headY || player2.headY - 1))) {
-                    return true;       
-    } else {
-        return false;
-    }
-}   

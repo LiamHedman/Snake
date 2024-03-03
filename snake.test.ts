@@ -12,7 +12,8 @@ describe("classic game testing", () => {
                               has_turned: false,
                               snake_body: [[4, 4]],
                               headX: 4,
-                              headY: 4}
+                              headY: 4,
+                              head_last_cords: [4, 4]};
 
         const arrow_right = new window.KeyboardEvent('keydown', { code: "ArrowRight" });
         
