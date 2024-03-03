@@ -7,6 +7,7 @@ const blockSize: number = 25;
     //Board dimensions
 const rows: number = 20;
 const cols: number = 20;
+const menuButton: HTMLButtonElement = document.createElement("button");
 
     //The board (drawable region in HTML)
 let board: HTMLCanvasElement;
@@ -22,8 +23,9 @@ type snake = {snake_direction: "up" | "down" | "left" | "right",
               velocityY: number,
               has_turned: boolean,
               snake_body: Array<cords>,
-              headX: number
-              headY: number}
+              headX: number,
+              headY: number,
+              head_last_cords: [number, number]}
 
 let player1: snake = {snake_direction: "right", 
                      velocityX: 0, 
@@ -31,7 +33,8 @@ let player1: snake = {snake_direction: "right",
                      has_turned: false, 
                      snake_body: [],
                      headX: 0,
-                     headY: 0}
+                     headY: 0,
+                     head_last_cords: [0, 0]}
 
 let player2: snake = {snake_direction: "left", 
                      velocityX: 0, 
@@ -39,7 +42,8 @@ let player2: snake = {snake_direction: "left",
                      has_turned: false, 
                      snake_body: [],
                      headX: 19,
-                     headY: 0}
+                     headY: 0,
+                     head_last_cords: [19, 0]}
 
     //Pictures of the snake's head
 const HeadUp: HTMLImageElement = new Image();
@@ -79,9 +83,12 @@ window.onload = function () {
     //Retrieves the HTML element with the ID "board"
     board = document.getElementById("board") as HTMLCanvasElement;
 
-    //Height and width of the board
+    //Height, width and style of the baord
     board.height = rows * blockSize;
     board.width = cols * blockSize;
+    board.style.display = "block";
+    board.style.marginLeft = "auto";
+    board.style.marginRight = "auto";
     
     //retrieves the 2D drawing context of the canvas and provides 2D drawing functions for the canvas.
     context = board.getContext("2d") as CanvasRenderingContext2D; 
@@ -99,7 +106,7 @@ window.onload = function () {
     const restartButton: HTMLButtonElement = document.createElement("button");
     restartButton.textContent = "RESTART";
     restartButton.style.position = "relative";
-    restartButton.style.top = "-520px";
+    restartButton.style.top = "-492.5px";
     restartButton.style.right = "-180px";
     restartButton.style.padding = "5px 10px";
     restartButton.style.fontSize = "16px";
@@ -114,6 +121,15 @@ window.onload = function () {
     restartButton.addEventListener("click", function () {
         location.reload(); // Reload the page to restart the game
     });
+
+    paint_menu_button(menuButton);
+
+    menuButton.addEventListener("click", function () {
+        window.location.href = "../index.html";
+    });
+
+    // Append the restart button element to the board container
+    document.body.appendChild(restartButton);
 }
 
 //Will run every "frame"
@@ -122,13 +138,19 @@ function update(): void {
         
         //Creates game over text and vishuals
         const gameOver: HTMLDivElement = document.createElement("div");
-        gameOver.textContent = "GAME OVER";
+        if (winner == "player1") {
+            gameOver.textContent ="Player one wins!";
+        } else if (winner == "player2") {
+            gameOver.textContent ="Player two wins!";
+        } else if (winner == "tie") {
+            gameOver.textContent = winner;
+        }
         gameOver.style.position = "relative";
-        gameOver.style.top = "-380px";
+        gameOver.style.top = "-345px";
         gameOver.style.left = "0";
         gameOver.style.color = "white";
         gameOver.style.fontFamily = "Press Start 2P, monospace";
-        gameOver.style.fontSize = "100px";
+        gameOver.style.fontSize = "70px";
 
         // Append the game over text element to the board container
         document.body.appendChild(gameOver);
@@ -138,7 +160,6 @@ function update(): void {
         //Stops the game loop
         return;
     }
-    
 
     // Color in the board
     context.fillStyle = "rgb(0, 51, 102)";
@@ -203,6 +224,17 @@ function update(): void {
     player2.headY += player2.velocityY;
     draw_snake_head();
 
+    // Checks for tie
+    if (player1.head_last_cords == player2.head_last_cords ||
+        player1.headX == player2.headX && player1.headY == player2.headY ||
+        player1.head_last_cords[0] == player2.headX && player1.head_last_cords[1] == player2.headY ||
+        player2.head_last_cords[0] == player1.headX && player2.head_last_cords[1] == player1.headY ||
+        player1.head_last_cords == player2.snake_body[1] ||
+        player2.head_last_cords == player1.snake_body[1]) {
+            winner = "tie";
+            GameOver = true;
+        }
+
     // Checks if player 1 collides with wall
     if (player1.headX < 0 || player1.headX > (cols - 1) || player1.headY < 0 || player1.headY > (cols - 1)) {
         winner = "player2"
@@ -243,9 +275,30 @@ function update(): void {
     
     //Checks for tie 
     tie = tie_check(player1, player2);
+
+    player1.head_last_cords = [player1.headX, player1.headY];
+    player2.head_last_cords = [player2.headX, player2.headY];
     
     player1.has_turned = false;
     player2.has_turned = false;
+}
+
+function paint_menu_button(menuButton: HTMLButtonElement): void {
+
+    //Visuals for menu button
+    menuButton.textContent = "MENU";
+    menuButton.style.position = "fixed"; // Change position to "fixed"
+    menuButton.style.top = "20px"; // Position from the top
+    menuButton.style.left = "20px"; // Position from the left
+    menuButton.style.padding = "5px 10px";
+    menuButton.style.fontSize = "20px";
+    menuButton.style.cursor = "pointer";
+    menuButton.style.color = "white";
+    menuButton.style.backgroundColor = "#003366";
+    menuButton.style.borderRadius = "5px"; 
+
+    // Append the menu button element to the body
+    document.body.appendChild(menuButton);
 }
 
 //Loads the correct imiage of the snake head depending on the direction
@@ -337,6 +390,7 @@ function changeDirection(e: KeyboardEvent): void {
             player1.has_turned = true;
         }
     }
+
     if (!player2.has_turned) {
         if (e.code == "ArrowUp" && player2.velocityY != 1) {
             player2.snake_direction = "up";

@@ -1,6 +1,9 @@
-let interval;
+type intervalID = ReturnType<typeof setInterval>
+
+let interval: intervalID;
 
 //Board dimensions
+
 const blockSize: number = 25;
 const rows: number = 20;
 const cols: number = 20;
@@ -54,11 +57,16 @@ const scoreCounter: HTMLDivElement = document.createElement("div");
 //Create reastartbutton and visuals
 const restartButton: HTMLButtonElement = document.createElement("button");
 
+//Create menu button
+const menuButton: HTMLButtonElement = document.createElement("button");
+
 //Initiated score 0
 let score: number = 0;
 
 //Game will stop when true
-let GameOver: boolean = false;
+    let dead: boolean = false;
+
+    let pause: boolean = false;
 
 //This will run once when the entire HTML document has finished loading.
 window.onload = function () {
@@ -81,7 +89,7 @@ window.onload = function () {
         changeDirection(e, player); // Passing both the event and the player object
     });
 
-    //Frame rate and speed of snake
+    //Frame rate and speed of snake if not paused
     interval = setInterval(update, 1000 / 10);
 
     display_score(scoreCounter, score);
@@ -92,17 +100,27 @@ window.onload = function () {
     restartButton.addEventListener("click", function () {
         location.reload(); // Reload the page to restart the game
     });
+
+    paint_menu_button(menuButton);
+
+    menuButton.addEventListener("click", function () {
+        window.location.href = "../index.html";
+    });
 }
 
 //Will run every "frame"
 function update(): void {
-
-    if (GameOver) {
-
-        print_game_over(document, interval);
-
+    //Game does not update when paused
+    if (pause) {
         return;
     }
+
+    if (dead) {
+        print_game_over(document, interval);
+        return;
+    }
+    
+
     
     paint_board(board, context);
 
@@ -117,7 +135,7 @@ function update(): void {
 
     color_in_snake(context, player, blockSize);
 
-    GameOver = is_game_over(player, rows, cols);
+    dead = is_game_over(player, rows, cols);
     
     player.has_turned = false;
 }
@@ -227,6 +245,34 @@ function gradient(distanceFromHead: number): string {
     let green: number = 150 - distanceFromHead * 3;
     let red: number = Math.min(100, distanceFromHead * 3);
     return `rgb(${red}, ${green}, 0)`;
+}
+
+//Checks and executes pause
+window.addEventListener("keydown", (event) => {
+    if (event.code === "Space") {
+        if (pause) {
+            ResumeGame(); // Resume game if paused 
+            
+        } 
+        else {
+            PauseGame(); // Pause game if not paused
+        }
+        pause = !pause; // Toggle pause
+    }
+});
+
+//Mechanics for Pause
+function PauseGame() {
+    clearInterval(interval);
+    
+                const PauseMenu: HTMLDivElement = document.createElement("div");
+                PauseMenu.innerText = "Press SPACE to resume";
+                document.body.appendChild(PauseMenu);
+            }
+
+//Mechanics for Resume
+function ResumeGame() {
+    interval = setInterval(update, 1000 / 10);
 }
 
 function color_in_snake(context: CanvasRenderingContext2D, player: snake, blockSize: number): void {
@@ -350,4 +396,23 @@ function paint_restart_button(restartButton: HTMLButtonElement): void {
     
     // Append the restart button element to the board container
     document.body.appendChild(restartButton);
+}
+
+
+function paint_menu_button(menuButton: HTMLButtonElement): void {
+
+    //Visuals for menu button
+    menuButton.textContent = "MENU";
+    menuButton.style.position = "fixed"; // Change position to "fixed"
+    menuButton.style.top = "20px"; // Position from the top
+    menuButton.style.left = "20px"; // Position from the left
+    menuButton.style.padding = "5px 10px";
+    menuButton.style.fontSize = "20px";
+    menuButton.style.cursor = "pointer";
+    menuButton.style.color = "white";
+    menuButton.style.backgroundColor = "#003366";
+    menuButton.style.borderRadius = "5px"; 
+
+    // Append the menu button element to the body
+    document.body.appendChild(menuButton);
 }
