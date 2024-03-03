@@ -17,13 +17,7 @@ let context: CanvasRenderingContext2D;
 
 // Snake variables
 type cords = [number, number];
-type snake = {snake_direction: "up" | "down" | "left" | "right", 
-              velocityX: number,
-              velocityY: number,
-              has_turned: boolean,
-              snake_body: Array<cords>,
-              headX: number,
-              headY: number}
+import { snake } from "../exports";
 
 let player: snake = {snake_direction: "up", 
                      velocityX: 0, 

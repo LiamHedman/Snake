@@ -81,7 +81,7 @@ export function changeDirection(e: KeyboardEvent, player: snake): void {
 }
 
 //Spawns food in random position
-export function spawnFood(player: snake): [number, number] {
+export function spawnFood(player: snake, cols: number, rows: number): [number, number] {
     let foodX: number;
     let foodY: number;
 
@@ -94,7 +94,7 @@ export function spawnFood(player: snake): [number, number] {
         if ((foodX === player.snake_body[i][0] && foodY === player.snake_body[i][1]) || 
             (foodX === player.headX && foodY === player.headY)) {
             // If food spawns on the snake, regenerate it
-            return spawnFood(player); // Recursively call the function to get new coordinates
+            return spawnFood(player, cols, rows); // Recursively call the function to get new coordinates
         }
     }
 
@@ -111,17 +111,17 @@ export function gradient(distanceFromHead: number): string {
 }
 
 //Mechanics for Pause
-export function PauseGame(PauseMenu: HTMLDivElement) {
+export function PauseGame(PauseMenu: HTMLDivElement, interval: NodeJS.Timeout) {
     clearInterval(interval);
                 PauseMenu.innerText = "Press SPACE to resume";
-                print_pause(document, interval);
+                print_pause(PauseMenu);
             }
 
 //Mechanics for Resume
-export function ResumeGame() {
+export function ResumeGame(update: () => void, PauseMenu: HTMLDivElement, interval: NodeJS.Timeout) {
     interval = setInterval(update, 1000 / 10);
     PauseMenu.innerText = "Press SPACE to pause";
-    print_pause(document, interval);
+    print_pause(PauseMenu);
 }
 
 export function color_in_snake(context: CanvasRenderingContext2D, player: snake, blockSize: number): void {
@@ -135,11 +135,11 @@ export function color_in_snake(context: CanvasRenderingContext2D, player: snake,
     }
 }
 
-export function print_pause(document: Document, interval: intervalID): void {
+export function print_pause(PauseMenu): void {
     document.body.appendChild(PauseMenu);
 }
 
-export function print_game_over(document: Document, interval): void {
+export function print_game_over(document: Document, interval: NodeJS.Timeout): void {
     //Creates game over text and vishuals
     const gameOver: HTMLDivElement = document.createElement("div");
     gameOver.textContent = "GAME OVER";
@@ -187,7 +187,13 @@ export function food_eaten(player: snake, foodX: number, foodY: number): boolean
     }
 }
 
-export function move_snake(player: snake): void {
+export function move_snake(player: snake,
+                           context: CanvasRenderingContext2D,
+                           HeadUp: HTMLImageElement,
+                           HeadDown: HTMLImageElement,
+                           HeadLeft: HTMLImageElement,
+                           HeadRight: HTMLImageElement,
+                           blockSize: number): void {
 
     // Make body follow head
     for (let i = player.snake_body.length - 1; i > 0; i--) {
