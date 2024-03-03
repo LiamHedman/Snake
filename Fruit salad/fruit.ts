@@ -1,6 +1,9 @@
-let interval;
+type intervalID = ReturnType<typeof setInterval>
+
+let interval: intervalID;
 
 //Board dimensions
+
 const blockSize: number = 25;
 const rows: number = 20;
 const cols: number = 20;
@@ -47,13 +50,13 @@ HeadLeft.src = "../Bilder/HeadLeft.png"
 let foodX: number;
 let foodY: number;
 
-let blue_foodX: number;
-let blue_foodY: number;
+let blue_foodX: number; 
+let blue_foodY: number; 
 
 let yellow_foodX: number; 
 let yellow_foodY: number; 
 
-let orange_foodX: number;
+let orange_foodX: number; 
 let orange_foodY: number;
 
 // Game logic
@@ -63,11 +66,20 @@ const scoreCounter: HTMLDivElement = document.createElement("div");
 //Create reastartbutton and visuals
 const restartButton: HTMLButtonElement = document.createElement("button");
 
+//Create menu button
+const menuButton: HTMLButtonElement = document.createElement("button");
+
+
+const PauseMenu: HTMLDivElement = document.createElement("div");
+
+
 //Initiated score 0
 let score: number = 0;
 
 //Game will stop when true
-let GameOver: boolean = false;
+    let dead: boolean = false;
+
+    let pause: boolean = false;
 
 //This will run once when the entire HTML document has finished loading.
 window.onload = function () {
@@ -93,26 +105,38 @@ window.onload = function () {
         changeDirection(e, player); // Passing both the event and the player object
     });
 
-    //Frame rate and speed of snake
+    //Frame rate and speed of snake if not paused
     interval = setInterval(update, 1000 / 10);
 
     display_score(scoreCounter, score);
 
     paint_restart_button(restartButton);
 
+    PauseMenu.innerText = "Press SPACE to pause";
+    print_pause(document, interval);
+
+
     //Event listener detecting click on restartbutton
     restartButton.addEventListener("click", function () {
         location.reload(); // Reload the page to restart the game
+    });
+
+    paint_menu_button(menuButton);
+
+    menuButton.addEventListener("click", function () {
+        window.location.href = "../index.html";
     });
 }
 
 //Will run every "frame"
 function update(): void {
+    //Game does not update when paused
+    if (pause) {
+        return;
+    }
 
-    if (GameOver) {
-
+    if (dead) {
         print_game_over(document, interval);
-
         return;
     }
     
@@ -148,12 +172,10 @@ function update(): void {
 
     color_in_snake(context, player, blockSize);
 
-    GameOver = is_game_over(player, rows, cols);
+    dead = is_game_over(player, rows, cols);
     
     player.has_turned = false;
 }
-
-
 
 //Functions:
 
@@ -260,6 +282,34 @@ function gradient(distanceFromHead: number): string {
     return `rgb(${red}, ${green}, 0)`;
 }
 
+//Checks and executes pause
+window.addEventListener("keydown", (event) => {
+    if (event.code === "Space") {
+        if (pause) {
+            ResumeGame(); // Resume game if paused 
+            
+        } 
+        else {
+            PauseGame(PauseMenu); // Pause game if not paused
+        }
+        pause = !pause; // Toggle pause
+    }
+});
+
+//Mechanics for Pause
+function PauseGame(PauseMenu: HTMLDivElement) {
+    clearInterval(interval);
+                PauseMenu.innerText = "Press SPACE to resume";
+                print_pause(document, interval);
+            }
+
+//Mechanics for Resume
+function ResumeGame() {
+    interval = setInterval(update, 1000 / 10);
+    PauseMenu.innerText = "Press SPACE to pause";
+    print_pause(document, interval);
+}
+
 function color_in_snake(context: CanvasRenderingContext2D, player: snake, blockSize: number): void {
     for (let i = 0; i < player.snake_body.length; i++) {
         let color: string = gradient(i);
@@ -271,7 +321,11 @@ function color_in_snake(context: CanvasRenderingContext2D, player: snake, blockS
     }
 }
 
-function print_game_over(document: Document, interval): void {
+function print_pause(document: Document, interval: intervalID): void {
+    document.body.appendChild(PauseMenu);
+}
+
+function print_game_over(document: Document, interval:intervalID): void {
     //Creates game over text and vishuals
     const gameOver: HTMLDivElement = document.createElement("div");
     gameOver.textContent = "GAME OVER";
@@ -381,4 +435,22 @@ function paint_restart_button(restartButton: HTMLButtonElement): void {
     
     // Append the restart button element to the board container
     document.body.appendChild(restartButton);
+}
+
+function paint_menu_button(menuButton: HTMLButtonElement): void {
+
+    //Visuals for menu button
+    menuButton.textContent = "MENU";
+    menuButton.style.position = "fixed"; // Change position to "fixed"
+    menuButton.style.top = "20px"; // Position from the top
+    menuButton.style.left = "20px"; // Position from the left
+    menuButton.style.padding = "5px 10px";
+    menuButton.style.fontSize = "20px";
+    menuButton.style.cursor = "pointer";
+    menuButton.style.color = "white";
+    menuButton.style.backgroundColor = "#003366";
+    menuButton.style.borderRadius = "5px"; 
+
+    // Append the menu button element to the body
+    document.body.appendChild(menuButton);
 }

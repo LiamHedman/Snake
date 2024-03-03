@@ -1,4 +1,7 @@
-let interval;
+type intervalID = ReturnType<typeof setInterval>
+
+let interval: intervalID;
+
 let winner: "player1" | "player2" | "tie" | "none" = "none";
 
 // Board variables

@@ -60,6 +60,9 @@ const restartButton: HTMLButtonElement = document.createElement("button");
 //Create menu button
 const menuButton: HTMLButtonElement = document.createElement("button");
 
+const PauseMenu: HTMLDivElement = document.createElement("div");
+
+
 //Initiated score 0
 let score: number = 0;
 
@@ -96,6 +99,10 @@ window.onload = function () {
 
     paint_restart_button(restartButton);
 
+    PauseMenu.innerText = "Press SPACE to pause";
+    print_pause(document, interval);
+
+
     //Event listener detecting click on restartbutton
     restartButton.addEventListener("click", function () {
         location.reload(); // Reload the page to restart the game
@@ -119,8 +126,6 @@ function update(): void {
         print_game_over(document, interval);
         return;
     }
-    
-
     
     paint_board(board, context);
 
@@ -255,24 +260,24 @@ window.addEventListener("keydown", (event) => {
             
         } 
         else {
-            PauseGame(); // Pause game if not paused
+            PauseGame(PauseMenu); // Pause game if not paused
         }
         pause = !pause; // Toggle pause
     }
 });
 
 //Mechanics for Pause
-function PauseGame() {
+function PauseGame(PauseMenu: HTMLDivElement) {
     clearInterval(interval);
-    
-                const PauseMenu: HTMLDivElement = document.createElement("div");
                 PauseMenu.innerText = "Press SPACE to resume";
-                document.body.appendChild(PauseMenu);
+                print_pause(document, interval);
             }
 
 //Mechanics for Resume
 function ResumeGame() {
     interval = setInterval(update, 1000 / 10);
+    PauseMenu.innerText = "Press SPACE to pause";
+    print_pause(document, interval);
 }
 
 function color_in_snake(context: CanvasRenderingContext2D, player: snake, blockSize: number): void {
@@ -284,6 +289,10 @@ function color_in_snake(context: CanvasRenderingContext2D, player: snake, blockS
                             blockSize, 
                             blockSize);
     }
+}
+
+function print_pause(document: Document, interval: intervalID): void {
+    document.body.appendChild(PauseMenu);
 }
 
 function print_game_over(document: Document, interval): void {
