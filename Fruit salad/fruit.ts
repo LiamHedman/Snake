@@ -59,6 +59,12 @@ let yellow_foodY: number;
 let orange_foodX: number; 
 let orange_foodY: number;
 
+let green_foodX: number;
+let green_foodY: number;
+
+let purple_foodX: number;
+let purple_foodY: number;
+
 // Game logic
 //HTML div element created dynamically. Will be used to display the score of the game
 const scoreCounter: HTMLDivElement = document.createElement("div");
@@ -99,6 +105,8 @@ window.onload = function () {
     [blue_foodX, blue_foodY] = spawnFood(player);
     [yellow_foodX, yellow_foodY] = spawnFood(player);
     [orange_foodX, orange_foodY] = spawnFood(player);
+    [green_foodX, green_foodY] = spawnFood(player);
+    [purple_foodX, purple_foodY] = spawnFood(player);
 
     //When a key is pressed down, changeDirection() will be called.
     document.addEventListener("keydown", (e: KeyboardEvent) => {
@@ -146,6 +154,9 @@ function update(): void {
     paint_food(blockSize, blue_foodX, blue_foodY, "blue", context);
     paint_food(blockSize, yellow_foodX, yellow_foodY, "yellow", context);
     paint_food(blockSize, orange_foodX, orange_foodY, "orange", context);
+    paint_food(blockSize, green_foodX, green_foodY, "green", context);
+    paint_food(blockSize, purple_foodX, purple_foodY, "purple", context);
+
 
 
     if (food_eaten(player, foodX, foodY)) {
@@ -166,6 +177,16 @@ function update(): void {
     if (food_eaten(player, orange_foodX, orange_foodY)) {
         score = scoreUpdate(scoreCounter, score);
         [orange_foodX, orange_foodY] = spawnFood(player);
+    }
+    
+    if (food_eaten(player, green_foodX, green_foodY)) {
+        score = scoreUpdate(scoreCounter, score);
+        [green_foodX, green_foodY] = spawnFood(player);
+    }
+
+    if (food_eaten(player, purple_foodX, purple_foodY)) {
+        score = scoreUpdate(scoreCounter, score);
+        [purple_foodX, purple_foodY] = spawnFood(player);
     }
 
     move_snake(player);
