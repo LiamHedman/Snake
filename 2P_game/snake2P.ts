@@ -141,7 +141,11 @@ window.onload = function () {
     document.body.appendChild(restartButton);
 }
 
-//Will run every "frame"
+/**
+ * The main function that runs every tick/frame
+ * 
+ * Has no input or ouput
+ */
 function update2P(): void {
     if (GameOver || tie) {
         

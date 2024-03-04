@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1709569686810" clover="3.2.0">
-  <project timestamp="1709569686810" name="All files">
+<coverage generated="1709569874652" clover="3.2.0">
+  <project timestamp="1709569874652" name="All files">
     <metrics statements="211" coveredstatements="86" conditionals="111" coveredconditionals="46" methods="23" coveredmethods="14" elements="345" coveredelements="146" complexity="0" loc="211" ncloc="211" packages="1" files="1" classes="1"/>
     <file name="exports.ts" path="/Users/ziadalbitar/Desktop/Plugg/PKD/Snake/exports.ts">
       <metrics statements="211" coveredstatements="86" conditionals="111" coveredconditionals="46" methods="23" coveredmethods="14"/>
@@ -125,20 +125,20 @@
       <line num="334" count="4" type="stmt"/>
       <line num="335" count="4" type="stmt"/>
       <line num="344" count="1" type="stmt"/>
-      <line num="345" count="2" type="stmt"/>
-      <line num="346" count="2" type="stmt"/>
-      <line num="347" count="2" type="stmt"/>
+      <line num="345" count="1" type="stmt"/>
+      <line num="346" count="1" type="stmt"/>
+      <line num="347" count="1" type="stmt"/>
       <line num="357" count="1" type="stmt"/>
-      <line num="358" count="2" type="stmt"/>
-      <line num="359" count="2" type="stmt"/>
-      <line num="360" count="2" type="stmt"/>
+      <line num="358" count="1" type="stmt"/>
+      <line num="359" count="1" type="stmt"/>
+      <line num="360" count="1" type="stmt"/>
       <line num="370" count="1" type="stmt"/>
       <line num="371" count="0" type="stmt"/>
       <line num="372" count="0" type="stmt"/>
       <line num="373" count="0" type="stmt"/>
       <line num="374" count="0" type="stmt"/>
       <line num="386" count="1" type="stmt"/>
-      <line num="387" count="4" type="stmt"/>
+      <line num="387" count="2" type="stmt"/>
       <line num="396" count="1" type="stmt"/>
       <line num="398" count="0" type="stmt"/>
       <line num="399" count="0" type="stmt"/>
