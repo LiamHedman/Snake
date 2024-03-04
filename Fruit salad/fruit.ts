@@ -93,8 +93,12 @@ let score: number = 0;
 
     let pause: boolean = false;
 
-// This will run once when the entire HTML document has finished loading.
-window.onload = function () {
+/**
+ * This will run once when the entire HTML document has finished loading.  
+ *
+ * no input or output
+ */ 
+const onload = function() {
 
     //Retrieves the HTML element with the ID "board"
     board = document.getElementById("board") as HTMLCanvasElement;
@@ -142,6 +146,7 @@ window.onload = function () {
         window.location.href = "../index.html";
     });
 }
+window.onload = onload;
 
 // Will run every "frame"
 function update(): void {

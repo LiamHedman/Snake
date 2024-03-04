@@ -90,51 +90,57 @@ let GameOver: boolean = false;
 
 let tie: boolean = false;
 
-//This will run once when the entire HTML document has finished loading.
-window.onload = function () {
-//Retrieves the HTML element with the ID "board"
-board = document.getElementById("board") as HTMLCanvasElement;
+/**
+ * This will run once when the entire HTML document has finished loading.  
+ *
+ * no input or output
+ */ 
+const onload = function() {
+   //Retrieves the HTML element with the ID "board"
+   board = document.getElementById("board") as HTMLCanvasElement;
 
-//Height, width and style of the baord
-board.height = rows * blockSize;
-board.width = cols * blockSize;
+   //Height, width and style of the baord
+   board.height = rows * blockSize;
+   board.width = cols * blockSize;
 
-//retrieves the 2D drawing context of the canvas and provides 2D drawing functions for the canvas.
-context = board.getContext("2d") as CanvasRenderingContext2D; 
+   //retrieves the 2D drawing context of the canvas and provides 2D drawing functions for the canvas.
+   context = board.getContext("2d") as CanvasRenderingContext2D; 
 
-//Spawns the food
-[foodX, foodY] = spawnFood(player1, rows, cols);
+   //Spawns the food
+   [foodX, foodY] = spawnFood(player1, rows, cols);
 
-//When a key is pressed down, changeDirection2P() will be called.
-document.addEventListener("keydown", (e: KeyboardEvent) => {
-   changeDirection2P(e, player1, player2); // Passing both the event and the player object
-});
+   //When a key is pressed down, changeDirection2P() will be called.
+   document.addEventListener("keydown", (e: KeyboardEvent) => {
+      changeDirection2P(e, player1, player2); // Passing both the event and the player object
+   });
 
-//Frame rate and speed of snake
-interval = setInterval(update2P, 1000 / 10);
 
-paint_restart_button(restartButton);
+   //Frame rate and speed of snake
+   interval = setInterval(update2P, 1000 / 10);
 
-// Append the restart button element to the board container
-document.body.appendChild(restartButton);
+   paint_restart_button(restartButton);
 
-PauseMenu.innerText = "Press SPACE to pause";
-print_pause(PauseMenu);
+   // Append the restart button element to the board container
+   document.body.appendChild(restartButton);
 
-//Event listener detecting click on restartbutton
-restartButton.addEventListener("click", function () {
-   location.reload(); // Reload the page to restart the game
-});
+   PauseMenu.innerText = "Press SPACE to pause";
+   print_pause(PauseMenu);
 
-paint_menu_button(menuButton);
+   //Event listener detecting click on restartbutton
+   restartButton.addEventListener("click", function () {
+      location.reload(); // Reload the page to restart the game
+   });
 
-menuButton.addEventListener("click", function () {
-   window.location.href = "../index.html";
-});
+   paint_menu_button(menuButton);
 
-// Append the restart button element to the board container
-document.body.appendChild(restartButton);
+   menuButton.addEventListener("click", function () {
+      window.location.href = "../index.html";
+   });
+
+   // Append the restart button element to the board container
+   document.body.appendChild(restartButton);
 }
+window.onload = onload;
 
 /**
 * The main function that runs every tick/frame
