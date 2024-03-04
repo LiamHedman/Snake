@@ -1,24 +1,18 @@
 import { snake,
-    cords,
-    changeDirection2P,
-    spawnFood,
-    ResumeGame,
-    color_in_snake,
-    paint_food,
-    gradient,
-    red_gradient,
-    paint_menu_button,
-    tie_check,
-    draw_snake_head2P,
-    print_game_over,
-    print_pause,
-    PauseGame,
-    paint_restart_button,
-    move_snake,
-    paint_board,
-    color_in_snake_red,
-    food_eaten,
-   
+         cords,
+         changeDirection2P,
+         spawnFood,
+         color_in_snake,
+         paint_food,
+         paint_menu_button,
+         draw_snake_head2P,
+         print_game_over,
+         print_pause,
+         paint_restart_button,
+         move_snake,
+         paint_board,
+         color_in_snake_red,
+         food_eaten,
    } from "../exports";
 
 let interval: NodeJS.Timeout;
@@ -157,7 +151,6 @@ if (GameOver) {
    print_game_over(document, interval);
    return;
 }
-
 
 paint_board(board, context);
 

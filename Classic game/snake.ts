@@ -3,7 +3,6 @@ import { snake,
          changeDirection,
          scoreUpdate,
          spawnFood,
-         ResumeGame,
          color_in_snake,
          paint_food,
          paint_board,
@@ -15,7 +14,6 @@ import { snake,
          move_snake,
          is_game_over,
          print_game_over,
-         PauseGame
          } from "../exports";
 
 let interval: NodeJS.Timeout;
