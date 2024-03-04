@@ -60,7 +60,6 @@ HeadLeft.src = "../Bilder/HeadLeft.png"
 let foodX: number;
 let foodY: number;
 
-// Game logic
 //HTML div element created dynamically. Will be used to display the score of the game
 const scoreCounter: HTMLDivElement = document.createElement("div");
 
@@ -120,6 +119,7 @@ window.onload = function () {
 
     paint_menu_button(menuButton);
 
+    //Event listener for button
     menuButton.addEventListener("click", function () {
         window.location.href = "../index.html";
     });
@@ -161,16 +161,16 @@ function update(): void {
     player.has_turned = false;
 }
 
-//Checks and executes pause
 window.addEventListener("keydown", (event) => {
     if (event.code === "Space") {
-        if (pause) {
-            ResumeGame(update, PauseMenu, interval); // Resume game if paused 
-            
-        } 
-        else {
-            PauseGame(PauseMenu, interval); // Pause game if not paused
-        }
-        pause = !pause; // Toggle pause
+       if (pause) {
+           interval = setInterval(update, 1000 / 10);
+           PauseMenu.innerText= "Press SPACE to pause";
+       } 
+       else {
+           clearInterval(interval);
+           PauseMenu.innerText= "Press SPACE to resume";
+       }
+       pause = !pause; // Toggle pause
     }
-});
+    });

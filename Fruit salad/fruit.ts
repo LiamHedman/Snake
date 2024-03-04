@@ -16,9 +16,8 @@ import { snake,
          print_game_over,
          paint_food_color
         } from "../exports";
-type intervalID = ReturnType<typeof setInterval>
-
-let interval: intervalID;
+    
+let interval: NodeJS.Timeout;
 
 //Board dimensions
 
@@ -74,29 +73,27 @@ let green_foodY: number;
 let purple_foodX: number;
 let purple_foodY: number;
 
-// Game logic
-//HTML div element created dynamically. Will be used to display the score of the game
+// HTML div element created dynamically. Will be used to display the score of the game
 const scoreCounter: HTMLDivElement = document.createElement("div");
 
-//Create reastartbutton and visuals
+// Create reastartbutton and visuals
 const restartButton: HTMLButtonElement = document.createElement("button");
 
-//Create menu button
+// Create menu button
 const menuButton: HTMLButtonElement = document.createElement("button");
 
-
+// Create pause menu
 const PauseMenu: HTMLDivElement = document.createElement("div");
 
-
-//Initiated score 0
+// Initiated score 0
 let score: number = 0;
 
-//Game will stop when true
+// Game will stop when true
     let dead: boolean = false;
 
     let pause: boolean = false;
 
-//This will run once when the entire HTML document has finished loading.
+// This will run once when the entire HTML document has finished loading.
 window.onload = function () {
 
     //Retrieves the HTML element with the ID "board"
@@ -140,12 +137,13 @@ window.onload = function () {
 
     paint_menu_button(menuButton);
 
+    // Event listener for menu
     menuButton.addEventListener("click", function () {
         window.location.href = "../index.html";
     });
 }
 
-//Will run every "frame"
+// Will run every "frame"
 function update(): void {
     //Game does not update when paused
     if (pause) {
@@ -212,3 +210,17 @@ function update(): void {
     
     player.has_turned = false;
 }
+
+window.addEventListener("keydown", (event) => {
+    if (event.code === "Space") {
+       if (pause) {
+           interval = setInterval(update, 1000 / 10);
+           PauseMenu.innerText= "Press SPACE to pause";
+       } 
+       else {
+           clearInterval(interval);
+           PauseMenu.innerText= "Press SPACE to resume";
+       }
+       pause = !pause; // Toggle pause
+    }
+    });

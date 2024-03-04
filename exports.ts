@@ -378,6 +378,16 @@ export function color_in_snake(context: CanvasRenderingContext2D, player: snake,
     }
 }
 
+export function color_in_snake_red(context: CanvasRenderingContext2D, player: snake, blockSize: number): void {
+    for (let i = 0; i < player.snake_body.length; i++) {
+        let color: string = red_gradient(i);
+        context.fillStyle = color;
+        context.fillRect(player.snake_body[i][0] * blockSize, 
+                            player.snake_body[i][1] * blockSize,
+                            blockSize, 
+                            blockSize);
+    }
+}
 /**
  * Displays the pause menu
  * 
