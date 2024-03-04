@@ -3,7 +3,8 @@ const path = require('path');
 module.exports = {
     entry: {
         classic: './Classic game/snake.ts',
-        two_player: './2P_game/snake2P.ts'
+        two_player: './2P_game/snake2P.ts',
+        fruit_salas: './Fruit salad/fruit.ts'
     },
     output: {
         filename: '[name].bundle.js',

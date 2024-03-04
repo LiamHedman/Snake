@@ -109,7 +109,7 @@ window.onload = function () {
     });
 
     //Frame rate and speed of snake
-    interval = setInterval(update2P, 800 / 10);
+    interval = setInterval(update2P, 1000 / 10);
 
     //Create reastartbutton and vishuals
     const restartButton: HTMLButtonElement = document.createElement("button");
