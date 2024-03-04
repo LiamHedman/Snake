@@ -1,11 +1,14 @@
+// This type describes the snake the player will control
 export type snake = {snake_direction: "up" | "down" | "left" | "right", 
                     velocityX: number,
                     velocityY: number,
                     has_turned: boolean,
                     snake_body: Array<cords>,
                     headX: number,
-                    headY: number}
+                    headY: number,
+                    head_last_cords: cords}
 
+// A simple type to store coordinates
 export type cords = [number, number];
 
 export function scoreUpdate(scoreCounter: HTMLDivElement ,score: number): number {
@@ -14,7 +17,16 @@ export function scoreUpdate(scoreCounter: HTMLDivElement ,score: number): number
     return new_score;
 }
 
-//Loads the correct imiage of the snake head depending on the direction
+/**
+ * Draws the snake in single-player game-modes
+ * 
+ * @param {snake} player - the snake to draw
+ * @param {HTMLImageElement} HeadUp - picture of head's snake facing up
+ * @param {HTMLImageElement} HeadDown- picture of head's snake facing down
+ * @param {HTMLImageElement} HeadLeft- picture of head's snake facing left
+ * @param {HTMLImageElement} HeadRight - picture of head's snake facing right
+ * @param {number} blockSize - the size of the blocks in the game gride in pixels
+ */
 export function drawSnakeHead(player: snake, 
                         context: CanvasRenderingContext2D, 
                         HeadUp: HTMLImageElement, 
@@ -53,6 +65,77 @@ export function drawSnakeHead(player: snake,
     }
 }
 
+export function draw_snake_head2P(player1: snake,
+                                  player2: snake,
+                                  context: CanvasRenderingContext2D,
+                                  HeadUp: HTMLImageElement, 
+                                  HeadDown: HTMLImageElement,
+                                  HeadLeft: HTMLImageElement, 
+                                  HeadRight: HTMLImageElement,
+                                  HeadUpRed: HTMLImageElement, 
+                                  HeadDownRed: HTMLImageElement,
+                                  HeadLeftRed: HTMLImageElement, 
+                                  HeadRightRed: HTMLImageElement, 
+                                  blockSize: number): void {
+    switch (player1.snake_direction) {
+        case "up":
+            context.drawImage(HeadUp, player1.headX * blockSize, 
+                              player1.headY * blockSize, 
+                              blockSize, 
+                              blockSize);
+            break;
+        case "down":
+            context.drawImage(HeadDown, player1.headX * blockSize, 
+                              player1.headY * blockSize, 
+                              blockSize, 
+                              blockSize);
+            break;
+        case "left":
+            context.drawImage(HeadLeft, 
+                              player1.headX * blockSize,
+                              player1.headY * blockSize,
+                              blockSize,
+                              blockSize);
+            break;
+        case "right":
+            context.drawImage(HeadRight,
+                              player1.headX * blockSize,
+                              player1.headY * blockSize,
+                              blockSize,
+                              blockSize);
+            break;
+    }
+
+    switch (player2.snake_direction) {
+        case "up":
+            context.drawImage(HeadUpRed, player2.headX * blockSize, 
+                              player2.headY * blockSize, 
+                              blockSize, 
+                              blockSize);
+            break;
+        case "down":
+            context.drawImage(HeadDownRed, player2.headX * blockSize, 
+                              player2.headY * blockSize, 
+                              blockSize, 
+                              blockSize);
+            break;
+        case "left":
+            context.drawImage(HeadLeftRed, 
+                              player2.headX * blockSize,
+                              player2.headY * blockSize,
+                              blockSize,
+                              blockSize);
+            break;
+        case "right":
+            context.drawImage(HeadRightRed,
+                              player2.headX * blockSize,
+                              player2.headY * blockSize,
+                              blockSize,
+                              blockSize);
+            break;
+    }
+}
+
 //Chnges the direction of the snake 
 export function changeDirection(e: KeyboardEvent, player: snake): void {
     if (!player.has_turned) {
@@ -79,6 +162,85 @@ export function changeDirection(e: KeyboardEvent, player: snake): void {
     }
     player.has_turned = true;
 }
+export function changeDirection2P(e: KeyboardEvent, player1: snake, player2: snake): void {
+    if (!player1.has_turned) {
+        if (e.code == "KeyW" && player1.velocityY != 1) {
+            player1.snake_direction = "up";
+            player1.velocityX = 0;
+            player1.velocityY = -1;
+            player1.has_turned = true;
+        }
+        else if (e.code == "KeyS" && player1.velocityY != -1) {
+            player1.snake_direction = "down";
+            player1.velocityX = 0;
+            player1.velocityY = 1;
+            player1.has_turned = true;
+        }
+        else if (e.code == "KeyD" && player1.velocityX != -1) {
+            player1.snake_direction = "right";
+            player1.velocityX = 1;
+            player1.velocityY = 0;
+            player1.has_turned = true;
+        }
+        else if (e.code == "KeyA" && player1.velocityX != 1) {
+            player1.snake_direction = "left";
+            player1.velocityX = -1;
+            player1.velocityY = 0;
+            player1.has_turned = true;
+        }
+    }
+
+    if (!player2.has_turned) {
+        if (e.code == "ArrowUp" && player2.velocityY != 1) {
+            player2.snake_direction = "up";
+            player2.velocityX = 0;
+            player2.velocityY = -1;
+            player2.has_turned = true;
+        }
+        else if (e.code == "ArrowDown" && player2.velocityY != -1) {
+            player2.snake_direction = "down";
+            player2.velocityX = 0;
+            player2.velocityY = 1;
+            player2.has_turned = true;
+        }
+        else if (e.code == "ArrowRight" && player2.velocityX != -1) {
+            player2.snake_direction = "right";
+            player2.velocityX = 1;
+            player2.velocityY = 0;
+            player2.has_turned = true;
+        }
+        else if (e.code == "ArrowLeft" && player2.velocityX != 1) {
+            player2.snake_direction = "left";
+            player2.velocityX = -1;
+            player2.velocityY = 0;
+            player2.has_turned = true;
+        }
+    }
+}
+
+export function tie_check(player1: snake, player2: snake): boolean {
+    if ((player1.snake_direction == "left" && player2.snake_direction == "right") &&
+        (player1.headY == player2.headY) &&
+        (player1.headX == (player2.headX || player2.headX - 1))) {
+            console.log("krock!");
+            return true;
+    } else if ((player1.snake_direction == "right" && player2.snake_direction == "left") &&
+                (player1.headY == player2.headY) &&
+                (player1.headX == (player2.headX || player2.headX + 1))) {
+                    console.log("krock!");
+                    return true;
+    } else if ((player1.snake_direction == "up" && player2.snake_direction == "down") &&
+                (player1.headX == player2.headX) &&
+                (player1.headY == (player2.headY || player2.headY + 1))) {
+                    return true;
+    } else if ((player1.snake_direction == "down" && player2.snake_direction == "up") &&
+                (player1.headX == player2.headX) &&
+                (player1.headY == (player2.headY || player2.headY - 1))) {
+                    return true;       
+    } else {
+        return false;
+    }
+}   
 
 //Spawns food in random position
 export function spawnFood(player: snake, cols: number, rows: number): [number, number] {
@@ -109,6 +271,11 @@ export function gradient(distanceFromHead: number): string {
     let red: number = Math.min(100, distanceFromHead * 3);
     return `rgb(${red}, ${green}, 0)`;
 }
+export function red_gradient(distanceFromHead: number): string {
+    let red: number = 150 - distanceFromHead * 3;
+    let green: number = Math.min(100, distanceFromHead * 3);
+    return `rgb(${red}, ${green}, 0)`;
+}
 
 //Mechanics for Pause
 export function PauseGame(PauseMenu: HTMLDivElement, interval: NodeJS.Timeout) {
@@ -135,7 +302,7 @@ export function color_in_snake(context: CanvasRenderingContext2D, player: snake,
     }
 }
 
-export function print_pause(PauseMenu): void {
+export function print_pause(PauseMenu: HTMLDivElement): void {
     document.body.appendChild(PauseMenu);
 }
 
