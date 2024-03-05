@@ -14,7 +14,8 @@ export type cords = [number, number];
 /**
  * Updates the score and displays it on the screen.
  *
- * @param {HTMLDivElement} score_counter - The HTML element where the score is displayed
+ * @param {HTMLDivElement} score_counter - The HTML element where the score
+ *                                         is displayed
  * @param {number} score - The current score
  * @returns {number} - The updated score
  */
@@ -80,15 +81,24 @@ export function draw_snake_head(player: snake,
  *
  * @param {snake} player1 - The first player's snake
  * @param {snake} player2 - The second player's snake
- * @param {CanvasRenderingContext2D} context - The 2D rendering context of the canvas
- * @param {HTMLImageElement} head_up - Image of snake head facing up for player 1
- * @param {HTMLImageElement} head_down - Image of snake head facing down for player 1
- * @param {HTMLImageElement} head_left - Image of snake head facing left for player 1
- * @param {HTMLImageElement} head_right - Image of snake head facing right for player 1
- * @param {HTMLImageElement} head_upRed - Image of snake head facing up for player 2
- * @param {HTMLImageElement} head_downRed - Image of snake head facing down for player 2
- * @param {HTMLImageElement} head_leftRed - Image of snake head facing left for player 2
- * @param {HTMLImageElement} head_rightRed - Image of snake head facing right for player 2
+ * @param {CanvasRenderingContext2D} context - The 2D rendering context of
+ *                                             the canvas
+ * @param {HTMLImageElement} head_up - Image of snake head facing up for
+ *                                     player 1
+ * @param {HTMLImageElement} head_down - Image of snake head
+ *                                       facing down for player 1
+ * @param {HTMLImageElement} head_left - Image of snake head facing left for
+ *                                       player 1
+ * @param {HTMLImageElement} head_right - Image of snake head facing right for
+ *                                        player 1
+ * @param {HTMLImageElement} head_upRed - Image of snake head facing up for
+ *                                        player 2
+ * @param {HTMLImageElement} head_downRed - Image of snake head facing down for
+ *                                          player 2
+ * @param {HTMLImageElement} head_leftRed - Image of snake head facing left for
+ *                                          player 2
+ * @param {HTMLImageElement} head_rightRed - Image of snake head facing right
+ *                                           for player 2
  * @param {number} block_size - The size of blocks in the game grid in pixels
  */
 export function draw_snake_head2P(player1: snake,
@@ -163,7 +173,8 @@ export function draw_snake_head2P(player1: snake,
 }
 
 /**
- * Changes the direction of the snake based on keyboard input for single-player mode.
+ * Changes the direction of the snake based on keyboard input for
+ * single-player mode.
  *
  * @param {KeyboardEvent} e - The keyboard event
  * @param {snake} player - The snake to change direction
@@ -195,7 +206,8 @@ export function change_direction(e: KeyboardEvent, player: snake): void {
 }
 
 /**
- * Changes the direction of both snakes based on keyboard input for 2-player mode.
+ * Changes the direction of both snakes based on keyboard input for 2-player
+ * mode.
  *
  * @param {KeyboardEvent} e - The keyboard event
  * @param {snake} player1 - The snake of player 1
@@ -315,7 +327,9 @@ export function spawn_food(player: snake,
                 food_y === player.snake_body[i][1]) ||
             (food_x === player.head_x && food_y === player.head_y)) {
             // If food spawns on the snake, regenerate it
-            return spawn_food(player, cols, rows); // Recursively call the function to get new coordinates
+            return spawn_food(player, cols, rows); // Recursively call the
+                                                   // function to get new
+                                                   // coordinates
         }
     }
 
@@ -325,9 +339,11 @@ export function spawn_food(player: snake,
 
 
 /**
- * Determines the color gradient for the snake body based on distance from the head.
+ * Determines the color gradient for the snake body based on distance from
+ * the head.
  *
- * @param {number} distance_from_head - The distance of the body segment from the head
+ * @param {number} distance_from_head - The distance of the body segment from
+ *                                      the head
  * @returns {string} - The color gradient in RGB format
  */
 export function gradient(distance_from_head: number): string {
@@ -336,9 +352,11 @@ export function gradient(distance_from_head: number): string {
     return `rgb(${red}, ${green}, 0)`;
 }
 /**
- * Determines the color gradient for the red (player 2) snake body based on distance from the head.
+ * Determines the color gradient for the red (player 2) snake
+ * body based on distance from the head.
  *
- * @param {number} distance_from_head - The distance of the body segment from the head
+ * @param {number} distance_from_head - The distance of the body segment
+ *                                      from the head
  * @returns {string} - The color gradient in RGB format
  */
 export function red_gradient(distance_from_head: number): string {
@@ -351,7 +369,8 @@ export function red_gradient(distance_from_head: number): string {
  * Pauses the game
  *
  * @param {HTMLDivElement} pause_menu  - The pause menu element
- * @param {NodeJS.Timeout} interval - The interval that calls the main function of the game
+ * @param {NodeJS.Timeout} interval - The interval that calls the main
+ *                                    function of the game
  */
 export function pause_game(pause_menu: HTMLDivElement,
                            interval: NodeJS.Timeout) {
@@ -365,7 +384,8 @@ export function pause_game(pause_menu: HTMLDivElement,
  *
  * @param {function} update - The main function of the game
  * @param {HTMLDivElement} pause_menu  - The pause menu element
- * @param {NodeJS.Timeout} interval - The interval that calls the main function of the game
+ * @param {NodeJS.Timeout} interval - The interval that calls the main
+ *                                    function of the game
  */
 export function resume_game(update: () => void,
                             pause_menu: HTMLDivElement,
@@ -427,7 +447,8 @@ export function print_pause(pause_menu: HTMLDivElement): void {
  * Displays game over screen
  *
  * @param {Document} document - The HTML document
- * @param {NodeJS.Timeout} interval - The interval that calls the main function of the game
+ * @param {NodeJS.Timeout} interval - The interval that calls the main
+ *                                    function of the game
  */
 export function print_game_over(document: Document,
                                 interval: NodeJS.Timeout): void {

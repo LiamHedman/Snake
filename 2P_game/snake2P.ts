@@ -31,8 +31,10 @@ const menu_button: HTMLButtonElement = document.createElement("button");
 //The board (drawable region in HTML)
 let board: HTMLCanvasElement;
 
-//Provides the 2D rendering context for the drawing surface the canvas element.
-//Contains methods and properties that allow drawing shapes, text, images, etc.
+// Provides the 2D rendering context
+// for the drawing surface the canvas element.
+// Contains methods and properties that allow
+// drawing shapes, text, images, etc.
 let context: CanvasRenderingContext2D;
 
 // Pause Menu
@@ -103,7 +105,8 @@ const onload = function() {
    board.height = rows * block_size;
    board.width = cols * block_size;
 
-   //retrieves the 2D drawing context of the canvas and provides 2D drawing functions for the canvas.
+   // retrieves the 2D drawing context of the canvas and provides 2D
+   // drawing functions for the canvas.
    context = board.getContext("2d") as CanvasRenderingContext2D;
 
    //Spawns the food
@@ -111,7 +114,8 @@ const onload = function() {
 
    //When a key is pressed down, change_direction_(2p) will be called.
    document.addEventListener("keydown", (e: KeyboardEvent) => {
-      change_direction_2p(e, player1, player2); // Passing both the event and the player object
+      change_direction_2p(e, player1, player2); // Passing both the event and
+                                                // the player object
    });
 
 

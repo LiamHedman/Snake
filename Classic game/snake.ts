@@ -26,8 +26,10 @@ const cols: number = 20;
 //The board (drawable region in HTML)
 let board: HTMLCanvasElement;
 
-//Provides the 2D rendering context for the drawing surface the canvas element.
-//Contains methods and properties that allow drawing shapes, text, images, etc.
+// Provides the 2D rendering context for the
+// drawing surface the canvas element.
+// Contains methods and properties that
+//  allow drawing shapes, text, images, etc.
 let context: CanvasRenderingContext2D;
 
 
@@ -58,7 +60,8 @@ head_left.src = "../Bilder/HeadLeft.png"
 let food_x: number;
 let food_y: number;
 
-//HTML div element created dynamically. Will be used to display the score of the game
+// HTML div element created dynamically.
+// Will be used to display the score of the game
 const score_counter: HTMLDivElement = document.createElement("div");
 
 //Create reastartbutton and visuals
@@ -92,7 +95,8 @@ const onload = function() {
     board.height = rows * block_size;
     board.width = cols * block_size;
 
-    //retrieves the 2D drawing context of the canvas and provides 2D drawing functions for the canvas.
+    // Retrieves the 2D drawing context of the canvas and provides 2D drawing
+    // functions for the canvas.
     context = board.getContext("2d") as CanvasRenderingContext2D;
 
     //Spawns the food
