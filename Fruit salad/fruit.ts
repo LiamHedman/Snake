@@ -15,7 +15,7 @@ import { snake,
          print_game_over,
          paint_food_color
         } from "../exports";
-    
+
 let interval: NodeJS.Timeout;
 
 //Board dimensions
@@ -27,14 +27,14 @@ const cols: number = 20;
 //The board (drawable region in HTML)
 let board: HTMLCanvasElement;
 
-//Provides the 2D rendering context for the drawing surface the canvas element. 
-//Contains methods and properties that allow drawing shapes, text, images, etc. 
+//Provides the 2D rendering context for the drawing surface the canvas element.
+//Contains methods and properties that allow drawing shapes, text, images, etc.
 let context: CanvasRenderingContext2D;
 
-let player: snake = {snake_direction: "up", 
-                     velocity_x: 0, 
-                     velocity_y: 0, 
-                     has_turned: false, 
+let player: snake = {snake_direction: "up",
+                     velocity_x: 0,
+                     velocity_y: 0,
+                     has_turned: false,
                      snake_body: [],
                      head_x: 9,
                      head_y: 9,
@@ -57,13 +57,13 @@ head_left.src = "../Bilder/HeadLeft.png"
 let food_x: number;
 let food_y: number;
 
-let blue_food_x: number; 
-let blue_food_y: number; 
+let blue_food_x: number;
+let blue_food_y: number;
 
-let yellow_food_x: number; 
-let yellow_food_y: number; 
+let yellow_food_x: number;
+let yellow_food_y: number;
 
-let orange_food_x: number; 
+let orange_food_x: number;
 let orange_food_y: number;
 
 let green_food_x: number;
@@ -93,10 +93,10 @@ let score: number = 0;
     let pause: boolean = false;
 
 /**
- * This will run once when the entire HTML document has finished loading.  
+ * This will run once when the entire HTML document has finished loading.
  *
  * no input or output
- */ 
+ */
 const onload = function() {
 
     //Retrieves the HTML element with the ID "board"
@@ -105,10 +105,10 @@ const onload = function() {
     //Height and width of the board
     board.height = rows * block_size;
     board.width = cols * block_size;
-    
+
     //retrieves the 2D drawing context of the canvas and provides 2D drawing functions for the canvas.
-    context = board.getContext("2d") as CanvasRenderingContext2D; 
-    
+    context = board.getContext("2d") as CanvasRenderingContext2D;
+
     //Spawns the food
     [food_x, food_y] = spawn_food(player, cols, rows);
     [blue_food_x, blue_food_y] = spawn_food(player, cols, rows);
@@ -158,7 +158,7 @@ function update(): void {
         print_game_over(document, interval);
         return;
     }
-    
+
     paint_board(board, context);
 
     paint_food_color(block_size, food_x, food_y, "red", context);
@@ -189,7 +189,7 @@ function update(): void {
         score = score_update(score_counter, score);
         [orange_food_x, orange_food_y] = spawn_food(player, cols, rows);
     }
-    
+
     if (food_eaten(player, green_food_x, green_food_y)) {
         score = score_update(score_counter, score);
         [green_food_x, green_food_y] = spawn_food(player, cols, rows);
@@ -211,7 +211,7 @@ function update(): void {
     color_in_snake(context, player, block_size);
 
     dead = is_game_over(player, rows, cols);
-    
+
     player.has_turned = false;
 }
 
@@ -220,7 +220,7 @@ window.addEventListener("keydown", (event) => {
        if (pause) {
            interval = setInterval(update, 1000 / 10);
            pause_menu.innerText= "Press SPACE to pause";
-       } 
+       }
        else {
            clearInterval(interval);
            pause_menu.innerText= "Press SPACE to resume";

@@ -26,16 +26,16 @@ const cols: number = 20;
 //The board (drawable region in HTML)
 let board: HTMLCanvasElement;
 
-//Provides the 2D rendering context for the drawing surface the canvas element. 
-//Contains methods and properties that allow drawing shapes, text, images, etc. 
+//Provides the 2D rendering context for the drawing surface the canvas element.
+//Contains methods and properties that allow drawing shapes, text, images, etc.
 let context: CanvasRenderingContext2D;
 
 
 
-let player: snake = {snake_direction: "up", 
-                     velocity_x: 0, 
-                     velocity_y: 0, 
-                     has_turned: false, 
+let player: snake = {snake_direction: "up",
+                     velocity_x: 0,
+                     velocity_y: 0,
+                     has_turned: false,
                      snake_body: [],
                      head_x: 9,
                      head_y: 9,
@@ -80,10 +80,10 @@ let score: number = 0;
 
 
 /**
- * This will run once when the entire HTML document has finished loading.  
+ * This will run once when the entire HTML document has finished loading.
  *
  * no input or output
- */ 
+ */
 const onload = function() {
     //Retrieves the HTML element with the ID "board"
     board = document.getElementById("board") as HTMLCanvasElement;
@@ -91,10 +91,10 @@ const onload = function() {
     //Height and width of the board
     board.height = rows * block_size;
     board.width = cols * block_size;
-    
+
     //retrieves the 2D drawing context of the canvas and provides 2D drawing functions for the canvas.
-    context = board.getContext("2d") as CanvasRenderingContext2D; 
-    
+    context = board.getContext("2d") as CanvasRenderingContext2D;
+
     //Spawns the food
     [food_x, food_y] = spawn_food(player, cols, rows);
 
@@ -139,7 +139,7 @@ function update(): void {
         print_game_over(document, interval);
         return;
     }
-    
+
     paint_board(board, context);
 
     paint_food(block_size, food_x, food_y, context);
@@ -160,7 +160,7 @@ function update(): void {
     color_in_snake(context, player, block_size);
 
     dead = is_game_over(player, rows, cols);
-    
+
     player.has_turned = false;
 }
 
@@ -169,7 +169,7 @@ window.addEventListener("keydown", (event) => {
        if (pause) {
            interval = setInterval(update, 1000 / 10);
            pause_menu.innerText= "Press SPACE to pause";
-       } 
+       }
        else {
            clearInterval(interval);
            pause_menu.innerText= "Press SPACE to resume";

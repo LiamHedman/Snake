@@ -31,8 +31,8 @@ const menu_button: HTMLButtonElement = document.createElement("button");
 //The board (drawable region in HTML)
 let board: HTMLCanvasElement;
 
-//Provides the 2D rendering context for the drawing surface the canvas element. 
-//Contains methods and properties that allow drawing shapes, text, images, etc. 
+//Provides the 2D rendering context for the drawing surface the canvas element.
+//Contains methods and properties that allow drawing shapes, text, images, etc.
 let context: CanvasRenderingContext2D;
 
 // Pause Menu
@@ -40,19 +40,19 @@ const pause_menu: HTMLDivElement = document.createElement("div");
 
 let pause = false;
 
-let player1: snake = {snake_direction: "right", 
-                velocity_x: 0, 
-                velocity_y: 0, 
-                has_turned: false, 
+let player1: snake = {snake_direction: "right",
+                velocity_x: 0,
+                velocity_y: 0,
+                has_turned: false,
                 snake_body: [],
                 head_x: 0,
                 head_y: 0,
                 head_last_cords: [0, 0]}
 
-let player2: snake = {snake_direction: "left", 
-                velocity_x: 0, 
-                velocity_y: 0, 
-                has_turned: false, 
+let player2: snake = {snake_direction: "left",
+                velocity_x: 0,
+                velocity_y: 0,
+                has_turned: false,
                 snake_body: [],
                 head_x: 19,
                 head_y: 0,
@@ -91,10 +91,10 @@ let game_over: boolean = false;
 let tie: boolean = false;
 
 /**
- * This will run once when the entire HTML document has finished loading.  
+ * This will run once when the entire HTML document has finished loading.
  *
  * no input or output
- */ 
+ */
 const onload = function() {
    //Retrieves the HTML element with the ID "board"
    board = document.getElementById("board") as HTMLCanvasElement;
@@ -104,7 +104,7 @@ const onload = function() {
    board.width = cols * block_size;
 
    //retrieves the 2D drawing context of the canvas and provides 2D drawing functions for the canvas.
-   context = board.getContext("2d") as CanvasRenderingContext2D; 
+   context = board.getContext("2d") as CanvasRenderingContext2D;
 
    //Spawns the food
    [food_x, food_y] = spawn_food(player1, rows, cols);
@@ -144,7 +144,7 @@ window.onload = onload;
 
 /**
 * The main function that runs every tick/frame
-* 
+*
 * Has no input or ouput
 */
 function update_2p(): void {
@@ -287,10 +287,10 @@ player2.has_turned = false;
 window.addEventListener("keydown", (event) => {
 if (event.code === "Space") {
    if (pause) {
-       // Resume game if paused 
+       // Resume game if paused
        interval = setInterval(update_2p, 1000 / 10);
        pause_menu.innerText= "Press SPACE to pause";
-   } 
+   }
    else {
        clearInterval(interval);
        pause_menu.innerText= "Press SPACE to resume";
