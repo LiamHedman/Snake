@@ -120,7 +120,7 @@ const onload = function() {
 
 
    //Frame rate and speed of snake
-   interval = setInterval(update_2p, 1000 / 10);
+   interval = setInterval(update, 1000 / 10);
 
    paint_restart_button(restart_button);
 
@@ -151,7 +151,7 @@ window.onload = onload;
 *
 * Has no input or ouput
 */
-function update_2p(): void {
+function update(): void {
 //Game does not update when paused
 if (pause) {
    return;
@@ -292,7 +292,7 @@ window.addEventListener("keydown", (event) => {
 if (event.code === "Space") {
    if (pause) {
        // Resume game if paused
-       interval = setInterval(update_2p, 1000 / 10);
+       interval = setInterval(update, 1000 / 10);
        pause_menu.innerText= "Press SPACE to pause";
    }
    else {
