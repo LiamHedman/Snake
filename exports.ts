@@ -492,7 +492,7 @@ export function print_game_over_2p(document: Document,
     document.body.appendChild(game_over);
 
     clearInterval(interval)
-                                   }
+    }
 
 /**
  * Paints the board
