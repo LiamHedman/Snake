@@ -34,18 +34,21 @@ describe("Testing all functions that can be tested in jest", () => {
                               headY: 4,
                               head_last_cords: [4, 4]};
 
-        const arrow_right = new window.KeyboardEvent('keydown', { code: "ArrowRight" });
+        const arrow_right = new window.KeyboardEvent('keydown',
+                                                    {code: "ArrowRight"});
         
         changeDirection(arrow_right, player);
         expect(player.snake_direction).toBe("right");
         expect(player.has_turned).toBe(true);
         // Try to turn again, should not be possible and continue heading right
-        const arrow_up = new window.KeyboardEvent('keydown', { code: "ArrowUp" });
+        const arrow_up = new window.KeyboardEvent('keydown',
+                                                  {code: "ArrowUp"});
         changeDirection(arrow_right, player);
         expect(player.snake_direction).toBe("right");
         // Try to do a 180, reset has_turned to false to test this
         player.has_turned = false;
-        const arrow_left = new window.KeyboardEvent('keydown', { code: "ArrowLeft" });
+        const arrow_left = new window.KeyboardEvent('keydown',
+                                                    {code: "ArrowLeft"});
         changeDirection(arrow_left, player);
         expect(player.snake_direction).toBe("right");
     });
