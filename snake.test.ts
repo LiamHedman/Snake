@@ -1,15 +1,15 @@
 import {snake,
-        changeDirection,
+        change_direction,
         tie_check,
-        scoreUpdate,
-        changeDirection2P,
-        spawnFood,
+        score_update,
+        change_direction_2p,
+        spawn_food,
         gradient,
         red_gradient,
         food_eaten,
         is_game_over,
-        PauseGame,
-        ResumeGame,
+        pause_game,
+        resume_game,
         move_snake} from "./exports";
 import { JSDOM } from "jsdom";
 
@@ -26,53 +26,53 @@ describe("Testing all functions that can be tested in jest", () => {
         const window = dom.window;
 
         let player: snake = { snake_direction: "up",
-                              velocityX: 0,
-                              velocityY: -1,
+                              velocity_x: 0,
+                              velocity_y: -1,
                               has_turned: false,
                               snake_body: [[4, 4]],
-                              headX: 4,
-                              headY: 4,
+                              head_x: 4,
+                              head_y: 4,
                               head_last_cords: [4, 4]};
 
         const arrow_right = new window.KeyboardEvent('keydown',
                                                     {code: "ArrowRight"});
         
-        changeDirection(arrow_right, player);
+        change_direction(arrow_right, player);
         expect(player.snake_direction).toBe("right");
         expect(player.has_turned).toBe(true);
         // Try to turn again, should not be possible and continue heading right
         const arrow_up = new window.KeyboardEvent('keydown',
                                                   {code: "ArrowUp"});
-        changeDirection(arrow_right, player);
+        change_direction(arrow_right, player);
         expect(player.snake_direction).toBe("right");
         // Try to do a 180, reset has_turned to false to test this
         player.has_turned = false;
         const arrow_left = new window.KeyboardEvent('keydown',
                                                     {code: "ArrowLeft"});
-        changeDirection(arrow_left, player);
+        change_direction(arrow_left, player);
         expect(player.snake_direction).toBe("right");
     });
     
     test("tie_check", () => {
         let player1: snake = {
             snake_direction: "right",
-            velocityX: 1,
-            velocityY: 0,
+            velocity_x: 1,
+            velocity_y: 0,
             has_turned: false,
             snake_body: [[3, 5], [3, 4], [3, 3]],
-            headX: 5,
-            headY: 3,
+            head_x: 5,
+            head_y: 3,
             head_last_cords: [3, 4]
         };
 
         let player2: snake = {
             snake_direction: "left",
-            velocityX: 1,
-            velocityY: 0,
+            velocity_x: 1,
+            velocity_y: 0,
             has_turned: false,
             snake_body: [[3, 5], [3, 6], [3, 7]],
-            headX: 5,
-            headY: 3,
+            head_x: 5,
+            head_y: 3,
             head_last_cords: [3, 6]
         };
 
@@ -80,12 +80,12 @@ describe("Testing all functions that can be tested in jest", () => {
 
         player1 = {
             snake_direction: "right",
-            velocityX: 1,
-            velocityY: 0,
+            velocity_x: 1,
+            velocity_y: 0,
             has_turned: false,
             snake_body: [[4, 5], [4, 4], [4, 3]],
-            headX: 4,
-            headY: 4,
+            head_x: 4,
+            head_y: 4,
             head_last_cords: [4, 4]
         };
 
@@ -98,79 +98,79 @@ describe("Testing all functions that can be tested in jest", () => {
         const scoreCounter = document.getElementById("scoreCounter") as HTMLDivElement;
 
         let score = 10;
-        score = scoreUpdate(scoreCounter, score);
+        score = score_update(scoreCounter, score);
         
         expect(score).toBeGreaterThan(10); 
         expect(scoreCounter.textContent).toBe("SCORE: " + score);
     });
 
-    test("changeDirection2P", () => {
+    test("change_direction_2p", () => {
         const dom = new JSDOM();
         global.document = dom.window.document;
 
         let player1: snake = {
             snake_direction: "up",
-            velocityX: 0,
-            velocityY: -1,
+            velocity_x: 0,
+            velocity_y: -1,
             has_turned: false,
             snake_body: [[4, 4]],
-            headX: 4,
-            headY: 4,
+            head_x: 4,
+            head_y: 4,
             head_last_cords: [4, 4]
         };
 
         let player2: snake = {
             snake_direction: "right",
-            velocityX: 1,
-            velocityY: 0,
+            velocity_x: 1,
+            velocity_y: 0,
             has_turned: false,
             snake_body: [[8, 4]],
-            headX: 8,
-            headY: 4,
+            head_x: 8,
+            head_y: 4,
             head_last_cords: [8, 4]
         };
 
     
         const keyEventPlayer1 = new dom.window.KeyboardEvent('keydown', { code: "ArrowUp" });
 
-        changeDirection2P(keyEventPlayer1, player1, player2);
+        change_direction_2p(keyEventPlayer1, player1, player2);
 
         // Expect player 1's snake direction to not change
         expect(player1.snake_direction).toBe("up");
-        expect(player1.velocityX).toBe(0);
-        expect(player1.velocityY).toBe(-1);
+        expect(player1.velocity_x).toBe(0);
+        expect(player1.velocity_y).toBe(-1);
         expect(player1.has_turned).toBe(false);
 
         // Ensure player 2's snake direction changes
         expect(player2.snake_direction).toBe("up");
-        expect(player2.velocityX).toBe(0);
-        expect(player2.velocityY).toBe(-1);
+        expect(player2.velocity_x).toBe(0);
+        expect(player2.velocity_y).toBe(-1);
         expect(player2.has_turned).toBe(true);
     });
 
-    test("spawnFood", () => {
+    test("spawn_food", () => {
         const player: snake = {
             snake_direction: "up",
-            velocityX: 0,
-            velocityY: -1,
+            velocity_x: 0,
+            velocity_y: -1,
             has_turned: false,
             snake_body: [[1, 1], [1, 2], [1, 3]],
-            headX: 4,
-            headY: 4,
+            head_x: 4,
+            head_y: 4,
             head_last_cords: [4, 4]
         };
 
         const cols = 25;
         const rows = 25;
-        const [foodX, foodY] = spawnFood(player, cols, rows);
+        const [food_x, food_y] = spawn_food(player, cols, rows);
 
-        expect(foodX).toBeGreaterThanOrEqual(0);
-        expect(foodX).toBeLessThan(cols);
-        expect(foodY).toBeGreaterThanOrEqual(0);
-        expect(foodY).toBeLessThan(rows);
+        expect(food_x).toBeGreaterThanOrEqual(0);
+        expect(food_x).toBeLessThan(cols);
+        expect(food_y).toBeGreaterThanOrEqual(0);
+        expect(food_y).toBeLessThan(rows);
 
-        expect(player.snake_body.every(([x, y]) => !(x === foodX && y === foodY))).toBe(true);
-        expect(player.headX !== foodX || player.headY !== foodY).toBe(true);
+        expect(player.snake_body.every(([x, y]) => !(x === food_x && y === food_y))).toBe(true);
+        expect(player.head_x !== food_x || player.head_y !== food_y).toBe(true);
     });
 
     test("gradient and red_gradient", () => {
@@ -189,34 +189,34 @@ describe("Testing all functions that can be tested in jest", () => {
     test("is_game_over", () => {
         const player: snake = {
             snake_direction: "up",
-            velocityX: 0,
-            velocityY: -1,
+            velocity_x: 0,
+            velocity_y: -1,
             has_turned: false,
             snake_body: [[1, 1], [1, 2]],
-            headX: 1,
-            headY: 1,
+            head_x: 1,
+            head_y: 1,
             head_last_cords: [1, 1]
         };
 
-        const foodX = player.headX;
-        const foodY = player.headY;
+        const food_x = player.head_x;
+        const food_y = player.head_y;
 
-        const foodEaten = food_eaten(player, foodX, foodY);
+        const food_eaten_ = food_eaten(player, food_x, food_y);
 
-        expect(foodEaten).toBe(true);
+        expect(food_eaten_).toBe(true);
         expect(player.snake_body.length).toBe(3);
-        expect(player.snake_body[2]).toEqual([foodX, foodY]);
+        expect(player.snake_body[2]).toEqual([food_x, food_y]);
     });
 
     test("is_game_over", () => {
         let player: snake = {
             snake_direction: "up",
-            velocityX: 0,
-            velocityY: -1,
+            velocity_x: 0,
+            velocity_y: -1,
             has_turned: false,
             snake_body: [[1, 1], [1, 2], [2, 2], [3, 2], [3, 1], [2, 1], [1, 1]],
-            headX: 1,
-            headY: 1,
+            head_x: 1,
+            head_y: 1,
             head_last_cords: [2, 1]
         };
 
@@ -231,12 +231,12 @@ describe("Testing all functions that can be tested in jest", () => {
 
         player = {
             snake_direction: "up",
-            velocityX: 1,
-            velocityY: 0,
+            velocity_x: 1,
+            velocity_y: 0,
             has_turned: false,
             snake_body: [[25, 1]], 
-            headX: 25,
-            headY: 1,
+            head_x: 25,
+            head_y: 1,
             head_last_cords: [24, 1]
         };
 
@@ -245,20 +245,20 @@ describe("Testing all functions that can be tested in jest", () => {
         expect(gameOver).toBe(true);
     });
 
-    test("PauseGame and resume_game", () => {
+    test("pause_game and resume_game", () => {
         const dom = new JSDOM();
         const window = dom.window;
-        const PauseMenu = window.document.createElement("div");
+        const pause_menu = window.document.createElement("div");
         const interval: NodeJS.Timeout = setInterval(() => {}, 1000); // Mock interval
 
         
-        PauseGame(PauseMenu, interval);
-        // Check if the PauseMenu text is set correctly
-        expect(PauseMenu.innerText).toBe("Press SPACE to resume");
+        pause_game(pause_menu, interval);
+        // Check if the pause_menu text is set correctly
+        expect(pause_menu.innerText).toBe("Press SPACE to resume");
 
-        ResumeGame(() => {}, PauseMenu, interval);
+        resume_game(() => {}, pause_menu, interval);
 
-        expect(PauseMenu.innerText).toBe("Press SPACE to pause");
+        expect(pause_menu.innerText).toBe("Press SPACE to pause");
         clearInterval(interval);
     });
 
@@ -271,12 +271,12 @@ describe("Testing all functions that can be tested in jest", () => {
 
         const player: snake = {
             snake_direction: "right",
-            velocityX: 1,
-            velocityY: 0,
+            velocity_x: 1,
+            velocity_y: 0,
             has_turned: false,
             snake_body: [[4, 4], [3, 4], [2, 4]],
-            headX: 4,
-            headY: 4,
+            head_x: 4,
+            head_y: 4,
             head_last_cords: [4, 4]
         };
         const image = new Image();
@@ -284,8 +284,8 @@ describe("Testing all functions that can be tested in jest", () => {
         move_snake(player, canvasContext as any, image, image, image, image, 10);
 
         // Check if the snake's head position is updated correctly
-        expect(player.headX).toBe(5);
-        expect(player.headY).toBe(4);
+        expect(player.head_x).toBe(5);
+        expect(player.head_y).toBe(4);
 
         // Check if the snake's body is moved correctly
         expect(player.snake_body[1]).toEqual([4, 4]);
