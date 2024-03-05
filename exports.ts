@@ -453,20 +453,46 @@ export function print_pause(pause_menu: HTMLDivElement): void {
 export function print_game_over(document: Document,
                                 interval: NodeJS.Timeout): void {
     //Creates game over text and vishuals
-    const gameOver: HTMLDivElement = document.createElement("div");
-    gameOver.textContent = "GAME OVER";
-    gameOver.style.position = "relative";
-    gameOver.style.top = "-380px";
-    gameOver.style.left = "0";
-    gameOver.style.color = "white";
-    gameOver.style.fontFamily = "Press Start 2P, monospace";
-    gameOver.style.fontSize = "100px";
+    const game_over: HTMLDivElement = document.createElement("div");
+    game_over.textContent = "GAME OVER";
+    game_over.style.position = "relative";
+    game_over.style.top = "-380px";
+    game_over.style.left = "0";
+    game_over.style.color = "white";
+    game_over.style.fontFamily = "Press Start 2P, monospace";
+    game_over.style.fontSize = "100px";
 
     // Append the game over text element to the board container
-    document.body.appendChild(gameOver);
+    document.body.appendChild(game_over);
 
     clearInterval(interval)
 }
+
+export function print_game_over_2p(document: Document,
+                                   interval: NodeJS.Timeout,
+                                   winner: string) : void {
+
+    const game_over: HTMLDivElement = document.createElement("div");
+    if (winner == "tie") {
+        game_over.textContent = "Tie!";
+    } else if (winner == "player1") {
+        game_over.textContent = "Winner is player one!";
+    } else if (winner == "player2") {
+        game_over.textContent = "Winner is player two!";
+    }
+
+    game_over.style.position = "relative";
+    game_over.style.top = "-380px";
+    game_over.style.left = "0";
+    game_over.style.color = "white";
+    game_over.style.fontFamily = "Press Start 2P, monospace";
+    game_over.style.fontSize = "55px";
+
+    // Append the game over text element to the board container
+    document.body.appendChild(game_over);
+
+    clearInterval(interval)
+                                   }
 
 /**
  * Paints the board

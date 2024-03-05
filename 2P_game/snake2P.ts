@@ -13,6 +13,7 @@ import { snake,
          paint_board,
          color_in_snake_red,
          food_eaten,
+         print_game_over_2p,
    } from "../exports";
 
 let interval: NodeJS.Timeout;
@@ -158,7 +159,7 @@ if (pause) {
 }
 
 if (game_over) {
-   print_game_over(document, interval);
+   print_game_over_2p(document, interval, winner);
    return;
 }
 
